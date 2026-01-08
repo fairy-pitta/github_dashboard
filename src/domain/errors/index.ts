@@ -1,2 +1,2 @@
-// Domain error exports will be added here
+export * from './DomainError';
 
