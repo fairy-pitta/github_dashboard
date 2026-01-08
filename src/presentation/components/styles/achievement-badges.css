@@ -78,30 +78,19 @@
 }
 
 .achievement-badge-progress {
-  opacity: 0.5;
+  /* Do NOT use opacity here; it makes tooltips unreadable because opacity affects children */
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
 }
 
+.achievement-badge-progress i {
+  opacity: 0.7;
+}
+
+/* Deprecated: we now use only the unified dark tooltip for popups */
 .achievement-badge-progress-indicator {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 8px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  background: var(--bg-card);
-  padding: 2px 4px;
-  border-radius: 3px;
-  border: 1px solid var(--border-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-  z-index: 100;
-}
-
-.achievement-badge-progress:hover .achievement-badge-progress-indicator {
-  opacity: 1;
+  display: none;
 }
 
 /* Tooltip for badge description */
@@ -112,53 +101,53 @@
   transform: translateX(-50%);
   min-width: 180px;
   max-width: 250px;
-  background: rgba(15, 15, 25, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(12, 12, 16, 1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 8px;
   padding: 12px 14px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 10000;
   white-space: normal;
   text-align: left;
-  backdrop-filter: blur(12px);
+  backdrop-filter: none;
 }
 
 /* Ensure achieved badges have the same dark tooltip */
 .achievement-badge-tooltip-achieved {
-  background: rgba(15, 15, 25, 0.98) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6) !important;
+  background: rgba(12, 12, 16, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75) !important;
 }
 
 /* Progress badges tooltip */
 .achievement-badge-tooltip-progress {
-  background: rgba(15, 15, 25, 0.98) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6) !important;
+  background: rgba(12, 12, 16, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75) !important;
 }
 
 /* Adjust tooltip position for leftmost badges */
 .achievement-badges-list > .achievement-badge-compact:first-child .achievement-badge-tooltip {
   left: 0;
   transform: translateX(0);
-  background: rgba(15, 15, 25, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+  background: rgba(12, 12, 16, 1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75);
 }
 
 .achievement-badges-list > .achievement-badge-compact:first-child .achievement-badge-tooltip::after {
   left: 20px;
   transform: translateX(0);
-  border-top-color: rgba(15, 15, 25, 0.98);
+  border-top-color: rgba(12, 12, 16, 1);
 }
 
 .achievement-badges-list > .achievement-badge-compact:first-child .achievement-badge-tooltip::before {
   left: 20px;
   transform: translateX(0);
-  border-top-color: rgba(255, 255, 255, 0.14);
+  border-top-color: rgba(255, 255, 255, 0.22);
 }
 
 .achievement-badge-compact:hover .achievement-badge-tooltip {
@@ -191,7 +180,7 @@
   left: 50%;
   transform: translateX(-50%);
   border: 6px solid transparent;
-  border-top-color: rgba(15, 15, 25, 0.98);
+  border-top-color: rgba(12, 12, 16, 1);
 }
 
 .achievement-badge-tooltip::before {
@@ -201,7 +190,7 @@
   left: 50%;
   transform: translateX(-50%);
   border: 7px solid transparent;
-  border-top-color: rgba(255, 255, 255, 0.14);
+  border-top-color: rgba(255, 255, 255, 0.22);
   margin-top: -1px;
 }
 

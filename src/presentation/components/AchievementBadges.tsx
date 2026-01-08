@@ -79,9 +79,6 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({ badges, lo
               className="achievement-badge-compact achievement-badge-progress"
             >
               <i className={`fas ${badge.icon}`}></i>
-              <span className="achievement-badge-progress-indicator">
-                {badge.progress}/{badge.target}
-              </span>
               <span className="achievement-badge-tooltip achievement-badge-tooltip-progress">
                 <span className="achievement-badge-tooltip-name">{badge.name}</span>
                 <span className="achievement-badge-tooltip-description">{badge.description}</span>
