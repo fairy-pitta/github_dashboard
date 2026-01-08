@@ -3,12 +3,13 @@ import { IPullRequestRepository } from '@/domain/repositories/IPullRequestReposi
 import { GitHubGraphQLClient } from '../api/GitHubGraphQLClient';
 import { PullRequestMapper } from '../api/mappers/PullRequestMapper';
 
-const DASHBOARD_QUERY = `
-  query DashboardData($limit: Int!) {
+const CREATED_PRS_QUERY = `
+  query GetCreatedPRs($limit: Int!, $cursor: String) {
     createdPRs: search(
       query: "is:pr author:@me archived:false sort:updated-desc"
       type: ISSUE
       first: $limit
+      after: $cursor
     ) {
       nodes {
         ... on PullRequest {
@@ -66,78 +67,103 @@ const DASHBOARD_QUERY = `
           }
         }
       }
-    }
-    reviewRequestedPRs: search(
-      query: "is:pr review-requested:@me archived:false sort:updated-desc"
-      type: ISSUE
-      first: $limit
-    ) {
-      nodes {
-        ... on PullRequest {
-          number
-          title
-          state
-          url
-          updatedAt
-          repository {
-            nameWithOwner
-            url
-            updatedAt
-            isPrivate
-            description
-            owner {
-              __typename
-              login
-              ... on User {
-                name
-                avatarUrl
-              }
-              ... on Organization {
-                name
-                avatarUrl
-              }
-            }
-          }
-          reviewDecision
-          comments {
-            totalCount
-          }
-          author {
-            login
-            ... on User {
-              name
-            }
-            ... on Organization {
-              name
-            }
-            avatarUrl
-          }
-          reviews(first: 10) {
-            nodes {
-              author {
-                login
-                ... on User {
-                  name
-                }
-                ... on Organization {
-                  name
-                }
-                avatarUrl
-              }
-            }
-          }
-        }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
 `;
 
-interface DashboardResponse {
+const REVIEW_REQUESTED_PRS_QUERY = `
+  query GetReviewRequestedPRs($limit: Int!, $cursor: String) {
+    reviewRequestedPRs: search(
+      query: "is:pr review-requested:@me archived:false sort:updated-desc"
+      type: ISSUE
+      first: $limit
+      after: $cursor
+    ) {
+      nodes {
+        ... on PullRequest {
+          number
+          title
+          state
+          url
+          updatedAt
+          repository {
+            nameWithOwner
+            url
+            updatedAt
+            isPrivate
+            description
+            owner {
+              __typename
+              login
+              ... on User {
+                name
+                avatarUrl
+              }
+              ... on Organization {
+                name
+                avatarUrl
+              }
+            }
+          }
+          reviewDecision
+          comments {
+            totalCount
+          }
+          author {
+            login
+            ... on User {
+              name
+            }
+            ... on Organization {
+              name
+            }
+            avatarUrl
+          }
+          reviews(first: 10) {
+            nodes {
+              author {
+                login
+                ... on User {
+                  name
+                }
+                ... on Organization {
+                  name
+                }
+                avatarUrl
+              }
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
+interface CreatedPRsResponse {
   createdPRs: {
     nodes: PullRequestMapper.GraphQLPullRequest[];
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor: string | null;
+    };
   };
+}
+
+interface ReviewRequestedPRsResponse {
   reviewRequestedPRs: {
     nodes: PullRequestMapper.GraphQLPullRequest[];
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor: string | null;
+    };
   };
 }
 
@@ -147,24 +173,40 @@ interface DashboardResponse {
 export class PullRequestRepository implements IPullRequestRepository {
   constructor(private readonly graphqlClient: GitHubGraphQLClient) {}
 
-  async getCreatedByMe(limit: number): Promise<PullRequest[]> {
-    const response = await this.graphqlClient.query<DashboardResponse>(
-      DASHBOARD_QUERY,
-      { limit }
+  async getCreatedByMe(limit: number, cursor?: string): Promise<{ prs: PullRequest[]; nextCursor?: string }> {
+    const response = await this.graphqlClient.query<CreatedPRsResponse>(
+      CREATED_PRS_QUERY,
+      { limit, cursor: cursor ?? null }
     );
 
     const prs = response.createdPRs?.nodes ?? [];
-    return PullRequestMapper.toDomainArray(prs);
+    const pageInfo = response.createdPRs?.pageInfo;
+    const nextCursor = pageInfo?.hasNextPage && pageInfo?.endCursor
+      ? pageInfo.endCursor
+      : undefined;
+
+    return {
+      prs: PullRequestMapper.toDomainArray(prs),
+      nextCursor,
+    };
   }
 
-  async getReviewRequested(limit: number): Promise<PullRequest[]> {
-    const response = await this.graphqlClient.query<DashboardResponse>(
-      DASHBOARD_QUERY,
-      { limit }
+  async getReviewRequested(limit: number, cursor?: string): Promise<{ prs: PullRequest[]; nextCursor?: string }> {
+    const response = await this.graphqlClient.query<ReviewRequestedPRsResponse>(
+      REVIEW_REQUESTED_PRS_QUERY,
+      { limit, cursor: cursor ?? null }
     );
 
     const prs = response.reviewRequestedPRs?.nodes ?? [];
-    return PullRequestMapper.toDomainArray(prs);
+    const pageInfo = response.reviewRequestedPRs?.pageInfo;
+    const nextCursor = pageInfo?.hasNextPage && pageInfo?.endCursor
+      ? pageInfo.endCursor
+      : undefined;
+
+    return {
+      prs: PullRequestMapper.toDomainArray(prs),
+      nextCursor,
+    };
   }
 
   async getReviewedByMe(limit: number): Promise<PullRequest[]> {

@@ -4,11 +4,12 @@ import { GitHubGraphQLClient } from '../api/GitHubGraphQLClient';
 import { IssueMapper } from '../api/mappers/IssueMapper';
 
 const ISSUES_QUERY = `
-  query GetInvolvedIssues($limit: Int!) {
+  query GetInvolvedIssues($limit: Int!, $cursor: String) {
     involvedIssues: search(
       query: "is:issue involves:@me archived:false sort:updated-desc"
       type: ISSUE
       first: $limit
+      after: $cursor
     ) {
       nodes {
         ... on Issue {
@@ -56,9 +57,23 @@ const ISSUES_QUERY = `
           }
         }
       }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
 `;
+
+interface IssuesResponse {
+  involvedIssues: {
+    nodes: IssueMapper.GraphQLIssue[];
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor: string | null;
+    };
+  };
+}
 
 /**
  * IssueRepository implementation
@@ -66,14 +81,21 @@ const ISSUES_QUERY = `
 export class IssueRepository implements IIssueRepository {
   constructor(private readonly graphqlClient: GitHubGraphQLClient) {}
 
-  async getInvolved(limit: number): Promise<Issue[]> {
-    const response = await this.graphqlClient.query<{
-      involvedIssues: {
-        nodes: IssueMapper.GraphQLIssue[];
-      };
-    }>(ISSUES_QUERY, { limit });
+  async getInvolved(limit: number, cursor?: string): Promise<{ issues: Issue[]; nextCursor?: string }> {
+    const response = await this.graphqlClient.query<IssuesResponse>(
+      ISSUES_QUERY,
+      { limit, cursor: cursor ?? null }
+    );
 
     const issues = response.involvedIssues?.nodes ?? [];
-    return IssueMapper.toDomainArray(issues);
+    const pageInfo = response.involvedIssues?.pageInfo;
+    const nextCursor = pageInfo?.hasNextPage && pageInfo?.endCursor
+      ? pageInfo.endCursor
+      : undefined;
+
+    return {
+      issues: IssueMapper.toDomainArray(issues),
+      nextCursor,
+    };
   }
 }
