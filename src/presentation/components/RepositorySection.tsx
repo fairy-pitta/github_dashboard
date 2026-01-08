@@ -32,7 +32,7 @@ export const RepositorySection: React.FC<RepositorySectionProps> = React.memo(({
     try {
       const container = Container.getInstance();
       const repoService = container.getRepositoryService();
-      const result = await repoService.getRecentlyUpdated(20, cursor);
+      const result = await repoService.getRecentlyUpdated(10, cursor);
 
       setRepositories((prev) => [...prev, ...result.repositories]);
       setCursor(result.nextCursor);

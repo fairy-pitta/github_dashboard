@@ -1,24 +1,28 @@
 .dashboard-section {
-  margin-bottom: 40px;
   background: var(--bg-card);
   border: 1px solid var(--border-primary);
-  border-radius: 20px;
-  padding: 28px;
+  border-radius: 16px;
+  padding: 16px;
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .section-title {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-primary);
-  margin: 0 0 24px 0;
-  padding-bottom: 16px;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--border-primary);
-  letter-spacing: -0.2px;
+  letter-spacing: -0.1px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .section-title i {
@@ -29,6 +33,10 @@
 .section-content {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  gap: 8px;
 }
 
 .empty-message {

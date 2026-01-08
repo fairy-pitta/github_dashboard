@@ -35,7 +35,7 @@ export const NewTabApp: React.FC = () => {
   const auth = useAuth();
   const { loading: themeLoading } = useTheme(); // Initialize theme
   const [filter, setFilter] = useState<'all' | 'open'>('open'); // Default to 'open'
-  const dashboard = useDashboardData(10, filter === 'open', !auth.loading && auth.isAuthenticated);
+  const dashboard = useDashboardData(4, filter === 'open', !auth.loading && auth.isAuthenticated);
 
   const handleRefresh = useCallback(async () => {
     await dashboard.refresh();
@@ -87,7 +87,9 @@ export const NewTabApp: React.FC = () => {
       />
 
       {dashboard.error && (
-        <ErrorMessage error={dashboard.error} onRetry={handleRefresh} />
+        <div style={{ flexShrink: 0, marginBottom: '16px' }}>
+          <ErrorMessage error={dashboard.error} onRetry={handleRefresh} />
+        </div>
       )}
 
       {dashboard.loading && !dashboard.data ? (

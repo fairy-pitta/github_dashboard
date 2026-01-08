@@ -1,17 +1,18 @@
 .error-message-container {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  padding: 20px;
+  gap: 12px;
+  padding: 12px 16px;
   background: var(--bg-error);
   border: 1px solid var(--accent-orange);
-  border-radius: 16px;
-  margin: 20px 0;
+  border-radius: 12px;
+  margin: 0 0 16px 0;
   backdrop-filter: blur(10px);
+  flex-shrink: 0;
 }
 
 .error-icon {
-  font-size: 24px;
+  font-size: 18px;
   flex-shrink: 0;
 }
 
@@ -20,17 +21,17 @@
 }
 
 .error-content h3 {
-  margin: 0 0 8px 0;
-  font-size: 16px;
-  font-weight: 500;
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
 .error-content p {
   margin: 0 0 0.5rem 0;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .error-suggestion {
@@ -41,16 +42,16 @@
 }
 
 .retry-button {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 6px 12px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-primary);
   background: var(--bg-button);
   border: 1px solid var(--border-button);
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .retry-button:hover {
