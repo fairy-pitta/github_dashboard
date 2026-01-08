@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { TokenInput } from '../../options/components/TokenInput';
 import { SaveButton } from '../../options/components/SaveButton';
 import { StatusMessage } from '../../options/components/StatusMessage';
@@ -142,7 +143,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
 
   if (!isOpen) return null;
 
-  return (
+  const menuContent = (
     <>
       <div className="settings-overlay" onClick={onClose} />
       <div className="settings-menu">
@@ -173,12 +174,14 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
                 <li>{t.language === 'en' ? 'Copy the token and paste it below' : 'トークンをコピーして、下に入力してください'}</li>
               </ol>
             </div>
-            <TokenInput
-              value={token}
-              onChange={setToken}
-              error={status?.type === 'error' ? status.message : undefined}
-              disabled={loading}
-            />
+            <div style={{ marginTop: '20px' }}>
+              <TokenInput
+                value={token}
+                onChange={setToken}
+                error={status?.type === 'error' ? status.message : undefined}
+                disabled={loading}
+              />
+            </div>
             <SaveButton
               onClick={handleSave}
               loading={loading}
@@ -259,5 +262,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
       </div>
     </>
   );
+
+  return createPortal(menuContent, document.body);
 };
 
