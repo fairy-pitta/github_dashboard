@@ -131,6 +131,26 @@ export class Container {
     }
     return this.contributionCalendarRepository;
   }
+
+  /**
+   * Get IssueRepository
+   */
+  getIssueRepository(): IssueRepository {
+    if (!this.issueRepository) {
+      throw new Error('Container not initialized. Call initialize() first.');
+    }
+    return this.issueRepository;
+  }
+
+  /**
+   * Get PullRequestRepository
+   */
+  getPullRequestRepository(): PullRequestRepository {
+    if (!this.prRepository) {
+      throw new Error('Container not initialized. Call initialize() first.');
+    }
+    return this.prRepository;
+  }
 }
 
 

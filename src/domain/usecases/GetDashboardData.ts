@@ -27,7 +27,7 @@ export class GetDashboardData {
   ) {}
 
   async execute(limit: number = 10): Promise<DashboardData> {
-    const [createdPRs, reviewRequestedPRs, involvedIssues, reposResult] =
+    const [createdPRsResult, reviewRequestedPRsResult, involvedIssuesResult, reposResult] =
       await Promise.all([
         this.prRepository.getCreatedByMe(limit),
         this.prRepository.getReviewRequested(limit),
@@ -36,9 +36,9 @@ export class GetDashboardData {
       ]);
 
     return {
-      createdPRs,
-      reviewRequestedPRs,
-      involvedIssues,
+      createdPRs: createdPRsResult.prs,
+      reviewRequestedPRs: reviewRequestedPRsResult.prs,
+      involvedIssues: involvedIssuesResult.issues,
       recentlyUpdatedRepos: reposResult.repositories,
     };
   }
