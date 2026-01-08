@@ -28,7 +28,18 @@ function waitForBody(): Promise<HTMLElement> {
   });
 }
 
+function isGitHubTopPage(): boolean {
+  const url = window.location.href;
+  // Only apply to https://github.com or https://github.com/
+  return url === 'https://github.com' || url === 'https://github.com/';
+}
+
 async function initDashboard() {
+  // Only apply to GitHub top page
+  if (!isGitHubTopPage()) {
+    return;
+  }
+
   dashboardEnabled = await checkDashboardEnabled();
   
   if (!dashboardEnabled) {
