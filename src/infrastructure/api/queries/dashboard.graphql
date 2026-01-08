@@ -19,6 +19,7 @@ query DashboardData($limit: Int!) {
           isPrivate
           description
           owner {
+            __typename
             login
             ... on User {
               name
@@ -36,14 +37,24 @@ query DashboardData($limit: Int!) {
         }
         author {
           login
-          name
+          ... on User {
+            name
+          }
+          ... on Organization {
+            name
+          }
           avatarUrl
         }
         reviews(first: 10) {
           nodes {
             author {
               login
-              name
+              ... on User {
+                name
+              }
+              ... on Organization {
+                name
+              }
               avatarUrl
             }
           }
@@ -72,6 +83,7 @@ query DashboardData($limit: Int!) {
           isPrivate
           description
           owner {
+            __typename
             login
             ... on User {
               name
@@ -89,14 +101,24 @@ query DashboardData($limit: Int!) {
         }
         author {
           login
-          name
+          ... on User {
+            name
+          }
+          ... on Organization {
+            name
+          }
           avatarUrl
         }
         reviews(first: 10) {
           nodes {
             author {
               login
-              name
+              ... on User {
+                name
+              }
+              ... on Organization {
+                name
+              }
               avatarUrl
             }
           }
@@ -125,6 +147,7 @@ query DashboardData($limit: Int!) {
           isPrivate
           description
           owner {
+            __typename
             login
             ... on User {
               name
@@ -142,7 +165,9 @@ query DashboardData($limit: Int!) {
         assignees(first: 10) {
           nodes {
             login
-            name
+            ... on User {
+              name
+            }
             avatarUrl
           }
         }
@@ -152,8 +177,19 @@ query DashboardData($limit: Int!) {
             color
           }
         }
+        author {
+          login
+          ... on User {
+            name
+          }
+          ... on Organization {
+            name
+          }
+          avatarUrl
+        }
       }
     }
   }
 }
+
 

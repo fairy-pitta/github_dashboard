@@ -24,6 +24,7 @@ const ISSUES_QUERY = `
             isPrivate
             description
             owner {
+              __typename
               login
               ... on User {
                 name
@@ -41,7 +42,9 @@ const ISSUES_QUERY = `
           assignees(first: 10) {
             nodes {
               login
-              name
+              ... on User {
+                name
+              }
               avatarUrl
             }
           }

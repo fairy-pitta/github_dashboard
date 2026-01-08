@@ -19,6 +19,7 @@ const REPOSITORIES_QUERY = `
           isPrivate
           description
           owner {
+            __typename
             login
             ... on User {
               name
@@ -51,6 +52,7 @@ const REPOSITORIES_QUERY = `
               isPrivate
               description
               owner {
+                __typename
                 login
                 ... on User {
                   name

@@ -24,6 +24,7 @@ const DASHBOARD_QUERY = `
             isPrivate
             description
             owner {
+              __typename
               login
               ... on User {
                 name
@@ -41,14 +42,24 @@ const DASHBOARD_QUERY = `
           }
           author {
             login
-            name
+            ... on User {
+              name
+            }
+            ... on Organization {
+              name
+            }
             avatarUrl
           }
           reviews(first: 10) {
             nodes {
               author {
                 login
-                name
+                ... on User {
+                  name
+                }
+                ... on Organization {
+                  name
+                }
                 avatarUrl
               }
             }
@@ -75,6 +86,7 @@ const DASHBOARD_QUERY = `
             isPrivate
             description
             owner {
+              __typename
               login
               ... on User {
                 name
@@ -92,14 +104,24 @@ const DASHBOARD_QUERY = `
           }
           author {
             login
-            name
+            ... on User {
+              name
+            }
+            ... on Organization {
+              name
+            }
             avatarUrl
           }
           reviews(first: 10) {
             nodes {
               author {
                 login
-                name
+                ... on User {
+                  name
+                }
+                ... on Organization {
+                  name
+                }
                 avatarUrl
               }
             }

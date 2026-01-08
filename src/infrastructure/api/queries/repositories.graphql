@@ -13,6 +13,7 @@ query GetRepositories($limit: Int!, $cursor: String) {
         isPrivate
         description
         owner {
+          __typename
           login
           ... on User {
             name
@@ -45,6 +46,7 @@ query GetRepositories($limit: Int!, $cursor: String) {
             isPrivate
             description
             owner {
+              __typename
               login
               ... on User {
                 name
@@ -61,4 +63,5 @@ query GetRepositories($limit: Int!, $cursor: String) {
     }
   }
 }
+
 
