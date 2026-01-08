@@ -4,6 +4,8 @@
 export const StorageKeys = {
   PAT_TOKEN: 'pat_token',
   SHOW_ON_GITHUB: 'show_on_github',
+  THEME: 'theme',
+  LANGUAGE: 'language',
   CACHE_PREFIX: 'cache_',
   CACHE_DASHBOARD: 'cache_dashboard',
   CACHE_REPOSITORIES: 'cache_repositories',
