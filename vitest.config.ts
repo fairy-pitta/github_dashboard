@@ -8,6 +8,7 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    watch: false, // Disable watch mode by default to prevent interactive loops
   },
   resolve: {
     alias: {
