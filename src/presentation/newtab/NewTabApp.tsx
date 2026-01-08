@@ -4,9 +4,12 @@ import { Header } from './components/Header';
 import { AuthGuard } from './components/AuthGuard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
+import { StatsWidget } from '../components/StatsWidget';
 import { useAuth } from './hooks/useAuth';
 import { useDashboardData } from './hooks/useDashboardData';
 import { useTheme } from './hooks/useTheme';
+import { Container } from '@/application/di/Container';
+import { StatsData } from '@/domain/entities/StatsData';
 import './styles/newtab.css';
 
 // Lazy load sections for code splitting
@@ -35,11 +38,38 @@ export const NewTabApp: React.FC = () => {
   const auth = useAuth();
   useTheme(); // Initialize theme
   const [filter, setFilter] = useState<'all' | 'open'>('open');
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [stats, setStats] = useState<StatsData | null>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
   const dashboard = useDashboardData(4, filter === 'open', !auth.loading && auth.isAuthenticated);
 
   const handleRefresh = useCallback(async () => {
     await dashboard.refresh();
   }, [dashboard.refresh]);
+
+  const handleStatsClick = useCallback(() => {
+    setIsStatsOpen(true);
+    // Fetch stats when opening
+    const fetchStats = async () => {
+      try {
+        setStatsLoading(true);
+        const container = Container.getInstance();
+        const statsService = container.getStatsService();
+        const statsData = await statsService.getStatsData();
+        setStats(statsData);
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+        setStats(null);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  const handleStatsClose = useCallback(() => {
+    setIsStatsOpen(false);
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -85,6 +115,7 @@ export const NewTabApp: React.FC = () => {
         filter={filter}
         onFilterChange={setFilter}
         user={auth.user}
+        onStatsClick={handleStatsClick}
       />
 
       {dashboard.error && (
@@ -112,6 +143,12 @@ export const NewTabApp: React.FC = () => {
           </Suspense>
         </DashboardLayout>
       )}
+      <StatsWidget
+        stats={stats}
+        loading={statsLoading}
+        isOpen={isStatsOpen}
+        onClose={handleStatsClose}
+      />
     </div>
   );
 };

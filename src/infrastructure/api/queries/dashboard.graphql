@@ -11,6 +11,7 @@ query DashboardData($limit: Int!) {
         title
         state
         url
+        createdAt
         updatedAt
         repository {
           nameWithOwner
@@ -75,6 +76,7 @@ query DashboardData($limit: Int!) {
         title
         state
         url
+        createdAt
         updatedAt
         repository {
           nameWithOwner

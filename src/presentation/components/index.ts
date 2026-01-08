@@ -11,4 +11,8 @@ export * from './IssueSection';
 export * from './RepositoryCard';
 export * from './RepositorySection';
 export * from './LoadMoreButton';
+export * from './StreakDisplay';
+export * from './AchievementBadges';
+export * from './StatsWidget';
+export * from './StatsButton';
 

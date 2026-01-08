@@ -6,9 +6,13 @@ import { PullRequestRepository } from '@/infrastructure/repositories/PullRequest
 import { IssueRepository } from '@/infrastructure/repositories/IssueRepository';
 import { RepositoryRepository } from '@/infrastructure/repositories/RepositoryRepository';
 import { ContributionCalendarRepository } from '@/infrastructure/repositories/ContributionCalendarRepository';
+import { StatsRepository } from '@/infrastructure/repositories/StatsRepository';
 import { AuthService } from '../services/AuthService';
 import { DashboardService } from '../services/DashboardService';
 import { RepositoryService } from '../services/RepositoryService';
+import { StreakService } from '../services/StreakService';
+import { AchievementService } from '../services/AchievementService';
+import { StatsService } from '../services/StatsService';
 
 /**
  * Dependency Injection Container
@@ -26,10 +30,14 @@ export class Container {
   private issueRepository: IssueRepository | null = null;
   private repoRepository: RepositoryRepository | null = null;
   private contributionCalendarRepository: ContributionCalendarRepository | null = null;
+  private statsRepository: StatsRepository | null = null;
 
   private authService: AuthService | null = null;
   private dashboardService: DashboardService | null = null;
   private repositoryService: RepositoryService | null = null;
+  private streakService: StreakService | null = null;
+  private achievementService: AchievementService | null = null;
+  private statsService: StatsService | null = null;
 
   private constructor() {}
 
@@ -53,6 +61,12 @@ export class Container {
     this.issueRepository = new IssueRepository(this.graphqlClient);
     this.repoRepository = new RepositoryRepository(this.graphqlClient);
     this.contributionCalendarRepository = new ContributionCalendarRepository(this.graphqlClient);
+    this.statsRepository = new StatsRepository(
+      this.graphqlClient,
+      this.contributionCalendarRepository,
+      this.prRepository,
+      this.issueRepository
+    );
 
     // Initialize services
     this.authService = new AuthService(this.authRepository, this.storage);
@@ -66,6 +80,9 @@ export class Container {
       this.repoRepository,
       this.cache
     );
+    this.streakService = new StreakService(this.cache);
+    this.achievementService = new AchievementService(this.cache);
+    this.statsService = new StatsService(this.statsRepository, this.cache);
   }
 
   /**
@@ -150,6 +167,36 @@ export class Container {
       throw new Error('Container not initialized. Call initialize() first.');
     }
     return this.prRepository;
+  }
+
+  /**
+   * Get StreakService
+   */
+  getStreakService(): StreakService {
+    if (!this.streakService) {
+      throw new Error('Container not initialized. Call initialize() first.');
+    }
+    return this.streakService;
+  }
+
+  /**
+   * Get AchievementService
+   */
+  getAchievementService(): AchievementService {
+    if (!this.achievementService) {
+      throw new Error('Container not initialized. Call initialize() first.');
+    }
+    return this.achievementService;
+  }
+
+  /**
+   * Get StatsService
+   */
+  getStatsService(): StatsService {
+    if (!this.statsService) {
+      throw new Error('Container not initialized. Call initialize() first.');
+    }
+    return this.statsService;
   }
 }
 

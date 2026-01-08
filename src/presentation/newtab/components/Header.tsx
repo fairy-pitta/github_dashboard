@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshButton } from '../../components/RefreshButton';
 import { FilterToggle } from '../../components/FilterToggle';
+import { StatsButton } from '../../components/StatsButton';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../../i18n/useLanguage';
 import { SettingsMenu } from './SettingsMenu';
@@ -15,6 +16,7 @@ interface HeaderProps {
   filter: 'all' | 'open';
   onFilterChange: (filter: 'all' | 'open') => void;
   user: User | null;
+  onStatsClick: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -23,6 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   filter,
   onFilterChange,
   user,
+  onStatsClick,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const { t, language, setLanguage } = useLanguage();
@@ -99,6 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
         <h1 className="dashboard-title">{getDashboardTitle()}</h1>
       </div>
       <div className="header-right">
+        <StatsButton onClick={onStatsClick} />
         <FilterToggle value={filter} onChange={onFilterChange} disabled={refreshing} />
         <RefreshButton onClick={onRefresh} loading={refreshing} />
         {showOnGitHub && (

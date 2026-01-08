@@ -7,6 +7,7 @@ export interface GraphQLPullRequest {
   title: string;
   state: 'OPEN' | 'CLOSED' | 'MERGED';
   url: string;
+  createdAt?: string;
   updatedAt: string;
   repository: GraphQLRepository;
   reviewDecision?: 'APPROVED' | 'CHANGES_REQUESTED' | 'REVIEW_REQUIRED' | null;
@@ -36,6 +37,7 @@ export class PullRequestMapper {
       title: graphql.title,
       state: graphql.state,
       url: graphql.url,
+      createdAt: graphql.createdAt,
       updatedAt: graphql.updatedAt,
       repository: {
         nameWithOwner: graphql.repository.nameWithOwner,

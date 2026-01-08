@@ -30,6 +30,7 @@
   gap: 10px;
 }
 
+.stats-button,
 .settings-button,
 .theme-toggle-button,
 .language-toggle-button,
@@ -48,6 +49,17 @@
   color: var(--text-primary);
 }
 
+.stats-button {
+  padding: 8px 16px;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.stats-button-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .settings-button,
 .theme-toggle-button,
 .language-toggle-button {
@@ -61,6 +73,7 @@
   white-space: nowrap;
 }
 
+.stats-button:hover,
 .settings-button:hover,
 .theme-toggle-button:hover,
 .language-toggle-button:hover,

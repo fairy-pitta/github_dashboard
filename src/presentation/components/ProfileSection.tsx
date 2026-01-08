@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@/domain/entities/User';
 import { ContributionCalendar } from '@/domain/entities/ContributionCalendar';
+import { ContributionStreak } from '@/domain/entities/ContributionStreak';
+import { AchievementBadge } from '@/domain/entities/AchievementBadge';
 import { Container } from '@/application/di/Container';
 import { useLanguage } from '../i18n/useLanguage';
 import { SkeletonLoader } from './SkeletonLoader';
+import { StreakDisplay } from './StreakDisplay';
+import { AchievementBadges } from './AchievementBadges';
 import './styles/profile-section.css';
 
 interface ProfileSectionProps {
@@ -16,6 +20,10 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
   const [calendar, setCalendar] = useState<ContributionCalendar | null>(null);
   const [calendarLoading, setCalendarLoading] = useState(true);
   const [calendarError, setCalendarError] = useState<string | null>(null);
+  const [streak, setStreak] = useState<ContributionStreak | null>(null);
+  const [streakLoading, setStreakLoading] = useState(false);
+  const [badges, setBadges] = useState<AchievementBadge[]>([]);
+  const [badgesLoading, setBadgesLoading] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -55,6 +63,47 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
 
     fetchCalendar();
   }, [user]);
+
+  // Fetch streak and achievements when calendar is available
+  useEffect(() => {
+    if (!calendar || !user) {
+      return;
+    }
+
+    const fetchStreakAndBadges = async () => {
+      try {
+        setStreakLoading(true);
+        setBadgesLoading(true);
+        const container = Container.getInstance();
+        const streakService = container.getStreakService();
+        const achievementService = container.getAchievementService();
+        const prRepository = container.getPullRequestRepository();
+
+        // Calculate streak
+        const streakData = await streakService.calculateStreak(calendar);
+        setStreak(streakData);
+
+        // Get PRs for achievements (limit to 100)
+        const prsResult = await prRepository.getCreatedByMe(100);
+        const pullRequests = prsResult.prs;
+
+        // Check achievements (reviews count will be 0 for now, can be enhanced later)
+        const badgesData = await achievementService.checkAchievements(
+          calendar,
+          pullRequests,
+          0 // reviews count - can be enhanced later
+        );
+        setBadges(badgesData);
+      } catch (error) {
+        console.error('Failed to fetch streak and achievements:', error);
+      } finally {
+        setStreakLoading(false);
+        setBadgesLoading(false);
+      }
+    };
+
+    fetchStreakAndBadges();
+  }, [calendar, user]);
 
   if (loading || !user) {
     return (
@@ -216,6 +265,10 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
             </div>
           </div>
         ) : null}
+        {/* Streak Display */}
+        <StreakDisplay streak={streak} loading={streakLoading} />
+        {/* Achievement Badges */}
+        <AchievementBadges badges={badges} loading={badgesLoading} />
       </div>
     </section>
   );

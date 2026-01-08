@@ -8,6 +8,9 @@ export const CacheKeys = {
   ISSUES: 'issues',
   REPOSITORIES: 'repositories',
   USER: 'user',
+  STREAK: 'streak',
+  ACHIEVEMENTS: 'achievements',
+  STATS: 'stats',
 } as const;
 
 

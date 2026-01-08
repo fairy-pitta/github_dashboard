@@ -13,6 +13,7 @@ export class PullRequest {
     public readonly title: string,
     public readonly state: PullRequestState,
     public readonly url: string,
+    public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly repository: Repository,
     public readonly reviewDecision: ReviewDecision,
@@ -26,6 +27,7 @@ export class PullRequest {
     title: string;
     state: PullRequestState;
     url: string;
+    createdAt?: string | Date;
     updatedAt: string | Date;
     repository: {
       nameWithOwner: string;
@@ -53,6 +55,12 @@ export class PullRequest {
       avatarUrl?: string | null;
     }>;
   }): PullRequest {
+    const createdAt =
+      plain.createdAt === undefined
+        ? (plain.updatedAt instanceof Date ? plain.updatedAt : new Date(plain.updatedAt))
+        : plain.createdAt instanceof Date
+          ? plain.createdAt
+          : new Date(plain.createdAt);
     const updatedAt =
       plain.updatedAt instanceof Date
         ? plain.updatedAt
@@ -67,6 +75,7 @@ export class PullRequest {
       plain.title,
       plain.state,
       plain.url,
+      createdAt,
       updatedAt,
       repository,
       plain.reviewDecision ?? null,

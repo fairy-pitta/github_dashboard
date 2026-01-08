@@ -17,6 +17,7 @@ const CREATED_PRS_QUERY = `
           title
           state
           url
+          createdAt
           updatedAt
           repository {
             nameWithOwner
@@ -89,6 +90,7 @@ const REVIEW_REQUESTED_PRS_QUERY = `
           title
           state
           url
+          createdAt
           updatedAt
           repository {
             nameWithOwner

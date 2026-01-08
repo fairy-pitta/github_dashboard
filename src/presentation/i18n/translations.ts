@@ -90,6 +90,26 @@ export interface Translations {
   languageLabel: string;
   english: string;
   japanese: string;
+  
+  // Streak
+  streakTitle: string;
+  streakDays: string;
+  streakLongest: string;
+  streakReminder: string;
+  
+  // Achievements
+  achievementsTitle: string;
+  
+  // Stats
+  statsButton: string;
+  statsTitle: string;
+  statsThisWeek: string;
+  statsThisMonth: string;
+  statsCommits: string;
+  statsPullRequests: string;
+  statsReviews: string;
+  statsIssues: string;
+  close: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -164,6 +184,20 @@ export const translations: Record<Language, Translations> = {
     languageLabel: 'Language',
     english: 'English',
     japanese: 'Japanese',
+    streakTitle: 'Contribution Streak',
+    streakDays: 'days',
+    streakLongest: 'Longest',
+    streakReminder: "You haven't contributed today!",
+    achievementsTitle: 'Achievements',
+    statsButton: 'Stats',
+    statsTitle: 'Statistics',
+    statsThisWeek: 'This Week',
+    statsThisMonth: 'This Month',
+    statsCommits: 'Commits',
+    statsPullRequests: 'Pull Requests',
+    statsReviews: 'Reviews',
+    statsIssues: 'Issues',
+    close: 'Close',
   },
   ja: {
     dashboardTitle: 'GitHub ダッシュボード',
@@ -236,6 +270,20 @@ export const translations: Record<Language, Translations> = {
     languageLabel: '言語',
     english: 'English',
     japanese: '日本語',
+    streakTitle: '連続コントリビューション',
+    streakDays: '日連続',
+    streakLongest: '最長記録',
+    streakReminder: '今日まだコントリビュートしていません！',
+    achievementsTitle: '実績バッジ',
+    statsButton: '統計',
+    statsTitle: '統計情報',
+    statsThisWeek: '今週',
+    statsThisMonth: '今月',
+    statsCommits: 'コミット',
+    statsPullRequests: 'プルリクエスト',
+    statsReviews: 'レビュー',
+    statsIssues: 'イシュー',
+    close: '閉じる',
   },
 };
 

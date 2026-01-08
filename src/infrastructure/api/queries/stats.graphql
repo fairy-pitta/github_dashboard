@@ -1,0 +1,31 @@
+query GetStatsData($limit: Int!) {
+  # Get all PRs created by me for stats
+  createdPRs: search(
+    query: "is:pr author:@me archived:false sort:created-desc"
+    type: ISSUE
+    first: $limit
+  ) {
+    nodes {
+      ... on PullRequest {
+        number
+        createdAt
+        updatedAt
+      }
+    }
+  }
+
+  # Get reviews submitted by me
+  reviews: search(
+    query: "is:pr reviewed-by:@me archived:false sort:updated-desc"
+    type: ISSUE
+    first: $limit
+  ) {
+    nodes {
+      ... on PullRequest {
+        number
+        updatedAt
+      }
+    }
+  }
+}
+
