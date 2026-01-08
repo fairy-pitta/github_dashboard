@@ -32,11 +32,10 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({ badges, lo
     );
   }
 
-  // Separate badges: achieved and in-progress (not achieved)
+  // Only show badges that have been achieved (at least one level)
   const achievedBadges = badges.filter((b) => b.achieved);
-  const inProgressBadges = badges.filter((b) => !b.achieved && b.progress > 0);
 
-  if (achievedBadges.length === 0 && inProgressBadges.length === 0) {
+  if (achievedBadges.length === 0) {
     return null;
   }
 
@@ -47,47 +46,27 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({ badges, lo
         <span className="achievement-icon-text">{t.achievementsTitle || '実績'}</span>
       </span>
       <div className="achievement-badges-list">
-        {achievedBadges.map((badge) => (
-          <span
-            key={badge.id}
-            className={`achievement-badge-compact achievement-badge-achieved ${
-              newlyAchieved.has(badge.id) ? 'achievement-badge-new' : ''
-            }`}
-          >
-            <i className={`fas ${badge.icon}`}></i>
-            {newlyAchieved.has(badge.id) && (
-              <span className="achievement-badge-sparkle-compact">
-                <i className="fas fa-sparkles"></i>
-              </span>
-            )}
-            <span className="achievement-badge-tooltip achievement-badge-tooltip-achieved">
-              <span className="achievement-badge-tooltip-name">{badge.name}</span>
-              <span className="achievement-badge-tooltip-description">{badge.description}</span>
-              {badge.nextTarget && badge.nextTarget > badge.progress && (
-                <span className="achievement-badge-tooltip-remaining">
-                  次の称号（{badge.nextName ?? '次'}）まであと {badge.nextTarget - badge.progress}
-                </span>
-              )}
-            </span>
-          </span>
-        ))}
-        {inProgressBadges.map((badge) => {
-          const remaining = Math.max(0, badge.target - badge.progress);
+        {achievedBadges.map((badge) => {
+          const remaining = badge.nextTarget ? Math.max(0, badge.nextTarget - badge.progress) : null;
           return (
             <span
               key={badge.id}
-              className="achievement-badge-compact achievement-badge-progress"
+              className={`achievement-badge-compact achievement-badge-achieved ${
+                newlyAchieved.has(badge.id) ? 'achievement-badge-new' : ''
+              }`}
             >
               <i className={`fas ${badge.icon}`}></i>
-              <span className="achievement-badge-tooltip achievement-badge-tooltip-progress">
+              {newlyAchieved.has(badge.id) && (
+                <span className="achievement-badge-sparkle-compact">
+                  <i className="fas fa-sparkles"></i>
+                </span>
+              )}
+              <span className="achievement-badge-tooltip">
                 <span className="achievement-badge-tooltip-name">{badge.name}</span>
                 <span className="achievement-badge-tooltip-description">{badge.description}</span>
-                <span className="achievement-badge-tooltip-progress">
-                  進捗: {badge.progress} / {badge.target}
-                </span>
-                {remaining > 0 && (
+                {badge.nextTarget && remaining !== null && remaining > 0 && (
                   <span className="achievement-badge-tooltip-remaining">
-                    次の称号まであと {remaining}
+                    次の称号（{badge.nextName ?? '次'}）まであと {remaining}
                   </span>
                 )}
               </span>

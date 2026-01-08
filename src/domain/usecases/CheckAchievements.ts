@@ -111,24 +111,27 @@ export class CheckAchievements {
     icon: string,
     progress: number,
     levels: Array<{ target: number; name: string; description: string }>
-  ): AchievementBadge {
+  ): AchievementBadge | null {
     const sorted = [...levels].sort((a, b) => a.target - b.target);
     const highestReachedIndex =
       sorted.reduce((acc, level, idx) => (progress >= level.target ? idx : acc), -1);
 
-    // If not reached any level yet, the "current" level is the first one (locked)
-    const currentIndex = Math.max(0, highestReachedIndex);
-    const current = sorted[currentIndex];
-    const achieved = progress >= current.target;
-    const next = sorted[currentIndex + 1] ?? null;
+    // If not reached any level yet, don't show the badge
+    if (highestReachedIndex === -1) {
+      return null;
+    }
+
+    // Current level is the highest one reached
+    const current = sorted[highestReachedIndex];
+    const next = sorted[highestReachedIndex + 1] ?? null;
 
     return AchievementBadge.fromPlain({
       id,
       name: current.name,
       description: current.description,
       icon,
-      achieved,
-      achievedAt: achieved ? new Date() : null,
+      achieved: true, // If badge is shown, it means at least one level is achieved
+      achievedAt: new Date(),
       progress,
       target: current.target,
       nextTarget: next?.target ?? null,
@@ -141,10 +144,12 @@ export class CheckAchievements {
     const streakCalculator = new CalculateStreak();
     const streak = streakCalculator.execute(input.calendar);
 
-    return this.definitions.map((def) => {
-      const progress = def.getProgress(input, streak.currentStreak);
-      return this.buildLeveledBadge(def.id, def.icon, progress, def.levels);
-    });
+    return this.definitions
+      .map((def) => {
+        const progress = def.getProgress(input, streak.currentStreak);
+        return this.buildLeveledBadge(def.id, def.icon, progress, def.levels);
+      })
+      .filter((badge): badge is AchievementBadge => badge !== null);
   }
 }
 
