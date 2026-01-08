@@ -17,9 +17,6 @@
       "run_at": "document_start"
     }
   ],
-  "chrome_url_overrides": {
-    "newtab": "newtab.html"
-  },
   "background": {
     "service_worker": "service-worker.js",
     "type": "module"
