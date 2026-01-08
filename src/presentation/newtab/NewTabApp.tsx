@@ -10,14 +10,14 @@ import { useTheme } from './hooks/useTheme';
 import './styles/newtab.css';
 
 // Lazy load sections for code splitting
-const CreatedPRSection = lazy(() =>
-  import('../components/CreatedPRSection').then((module) => ({
-    default: module.CreatedPRSection,
+const ProfileSection = lazy(() =>
+  import('../components/ProfileSection').then((module) => ({
+    default: module.ProfileSection,
   }))
 );
-const ReviewRequestedPRSection = lazy(() =>
-  import('../components/ReviewRequestedPRSection').then((module) => ({
-    default: module.ReviewRequestedPRSection,
+const PullRequestSection = lazy(() =>
+  import('../components/PullRequestSection').then((module) => ({
+    default: module.PullRequestSection,
   }))
 );
 const IssueSection = lazy(() =>
@@ -84,6 +84,7 @@ export const NewTabApp: React.FC = () => {
         refreshing={dashboard.loading}
         filter={filter}
         onFilterChange={setFilter}
+        user={auth.user}
       />
 
       {dashboard.error && (
@@ -97,13 +98,14 @@ export const NewTabApp: React.FC = () => {
       ) : (
         <DashboardLayout>
           <Suspense fallback={<LoadingSpinner size="small" />}>
+            <ProfileSection user={auth.user} loading={auth.loading} />
             <RepositorySection
               repositories={dashboard.data?.recentlyUpdatedRepos ?? []}
               loading={dashboard.loading}
             />
-            <CreatedPRSection prs={dashboard.data?.createdPRs ?? []} loading={dashboard.loading} />
-            <ReviewRequestedPRSection
-              prs={dashboard.data?.reviewRequestedPRs ?? []}
+            <PullRequestSection
+              createdPRs={dashboard.data?.createdPRs ?? []}
+              reviewRequestedPRs={dashboard.data?.reviewRequestedPRs ?? []}
               loading={dashboard.loading}
             />
             <IssueSection issues={dashboard.data?.involvedIssues ?? []} loading={dashboard.loading} />
