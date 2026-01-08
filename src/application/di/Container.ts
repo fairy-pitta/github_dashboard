@@ -7,6 +7,7 @@ import { IssueRepository } from '@/infrastructure/repositories/IssueRepository';
 import { RepositoryRepository } from '@/infrastructure/repositories/RepositoryRepository';
 import { ContributionCalendarRepository } from '@/infrastructure/repositories/ContributionCalendarRepository';
 import { StatsRepository } from '@/infrastructure/repositories/StatsRepository';
+import { GitHubOAuthService } from '@/infrastructure/auth/GitHubOAuthService';
 import { AuthService } from '../services/AuthService';
 import { DashboardService } from '../services/DashboardService';
 import { RepositoryService } from '../services/RepositoryService';
@@ -23,6 +24,7 @@ export class Container {
 
   private storage = new ChromeStorage();
   private cache = new MemoryCache(this.storage);
+  private oauthService: GitHubOAuthService | null = null;
 
   private graphqlClient: GitHubGraphQLClient | null = null;
   private authRepository: AuthRepository | null = null;
@@ -55,6 +57,17 @@ export class Container {
     this.token = token;
     this.graphqlClient = new GitHubGraphQLClient(token);
 
+    // Initialize OAuth service if not already initialized
+    if (!this.oauthService) {
+      try {
+        this.oauthService = new GitHubOAuthService();
+      } catch (error) {
+        // OAuth service initialization can fail if client ID is not configured
+        // This is acceptable - OAuth will just not be available
+        console.warn('OAuth service initialization failed:', error);
+      }
+    }
+
     // Initialize repositories
     this.authRepository = new AuthRepository(this.graphqlClient);
     this.prRepository = new PullRequestRepository(this.graphqlClient);
@@ -69,7 +82,11 @@ export class Container {
     );
 
     // Initialize services
-    this.authService = new AuthService(this.authRepository, this.storage);
+    this.authService = new AuthService(
+      this.authRepository,
+      this.storage,
+      this.oauthService ?? undefined
+    );
     this.dashboardService = new DashboardService(
       this.prRepository,
       this.issueRepository,
