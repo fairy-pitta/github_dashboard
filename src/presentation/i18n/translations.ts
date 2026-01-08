@@ -51,6 +51,11 @@ export interface Translations {
   themeDescription: string;
   light: string;
   dark: string;
+  lightBlue: string;
+  lightPurple: string;
+  lightGreen: string;
+  lightPink: string;
+  lightWhite: string;
   
   // Error messages
   errorTitle: string;
@@ -128,6 +133,11 @@ export const translations: Record<Language, Translations> = {
     themeDescription: 'Choose your preferred color theme. You can also toggle it from the dashboard header.',
     light: 'Light',
     dark: 'Dark',
+    lightBlue: 'Light Blue',
+    lightPurple: 'Light Purple',
+    lightGreen: 'Light Green',
+    lightPink: 'Light Pink',
+    lightWhite: 'Light White',
     errorTitle: 'Error',
     networkError: 'Network Error',
     authError: 'Authentication Error',
@@ -195,6 +205,11 @@ export const translations: Record<Language, Translations> = {
     themeDescription: 'お好みのカラーテーマを選択してください。ダッシュボードのヘッダーからも切り替えできます。',
     light: 'ライト',
     dark: 'ダーク',
+    lightBlue: 'ライトブルー',
+    lightPurple: 'ライトパープル',
+    lightGreen: 'ライトグリーン',
+    lightPink: 'ライトピンク',
+    lightWhite: 'ライトホワイト',
     errorTitle: 'エラー',
     networkError: 'ネットワークエラー',
     authError: '認証エラー',

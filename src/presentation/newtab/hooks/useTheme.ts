@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container } from '@/application/di/Container';
 import { StorageKeys } from '@/infrastructure/storage/StorageKeys';
 
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'light-blue' | 'light-purple' | 'light-green' | 'light-pink' | 'light-white';
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>('light');
@@ -15,9 +15,10 @@ export function useTheme() {
         const storage = container.getStorage();
         const savedTheme = await storage.get<Theme>(StorageKeys.THEME);
         
-        if (savedTheme === 'light' || savedTheme === 'dark') {
-          setTheme(savedTheme);
-          applyTheme(savedTheme);
+        const validThemes: Theme[] = ['light', 'dark', 'light-blue', 'light-purple', 'light-green', 'light-pink', 'light-white'];
+        if (savedTheme && validThemes.includes(savedTheme as Theme)) {
+          setTheme(savedTheme as Theme);
+          applyTheme(savedTheme as Theme);
         } else {
           // Default to light theme
           applyTheme('light');
@@ -37,8 +38,7 @@ export function useTheme() {
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  const toggleTheme = async () => {
-    const newTheme: Theme = theme === 'light' ? 'dark' : 'light';
+  const setThemeValue = async (newTheme: Theme) => {
     setTheme(newTheme);
     applyTheme(newTheme);
 
@@ -51,6 +51,11 @@ export function useTheme() {
     }
   };
 
-  return { theme, toggleTheme, loading };
+  const toggleTheme = async () => {
+    const newTheme: Theme = theme === 'light' ? 'dark' : 'light';
+    await setThemeValue(newTheme);
+  };
+
+  return { theme, toggleTheme, setThemeValue, loading };
 }
 

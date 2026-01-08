@@ -6,10 +6,8 @@ import { StatusMessage } from '../../options/components/StatusMessage';
 import { Container } from '@/application/di/Container';
 import { StorageKeys } from '@/infrastructure/storage/StorageKeys';
 import { useLanguage } from '../../i18n/useLanguage';
-import { useTheme } from '../hooks/useTheme';
+import { useTheme, Theme } from '../hooks/useTheme';
 import './settings-menu.css';
-
-type Theme = 'light' | 'dark';
 
 interface SettingsMenuProps {
   isOpen: boolean;
@@ -18,10 +16,9 @@ interface SettingsMenuProps {
 
 export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) => {
   const { t, language, setLanguage } = useLanguage();
-  const { theme: currentTheme, toggleTheme } = useTheme();
+  const { theme: currentTheme, setThemeValue } = useTheme();
   const [token, setToken] = useState('');
   const [showOnGitHub, setShowOnGitHub] = useState(true);
-  const [theme, setTheme] = useState<Theme>(currentTheme);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{
     type: 'success' | 'error' | 'info';
@@ -29,9 +26,6 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
   } | null>(null);
 
 
-  useEffect(() => {
-    setTheme(currentTheme);
-  }, [currentTheme]);
 
   const loadSettings = useCallback(async () => {
     try {
@@ -121,21 +115,40 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
   const handleThemeChange = async (newTheme: Theme) => {
     if (newTheme === currentTheme) return;
     
-    setTheme(newTheme);
     try {
-      const container = Container.getInstance();
-      const storage = container.getStorage();
-      await storage.set(StorageKeys.THEME, newTheme);
-      toggleTheme();
+      await setThemeValue(newTheme);
+      const themeName = getThemeDisplayName(newTheme, t);
       setStatus({
         type: 'success',
-        message: t.themeChanged.replace('{theme}', newTheme === 'light' ? t.light : t.dark),
+        message: t.themeChanged.replace('{theme}', themeName),
       });
     } catch (error) {
       console.error('Failed to save theme:', error);
-      setTheme(currentTheme);
     }
   };
+
+  const getThemeDisplayName = (theme: Theme, translations: typeof t): string => {
+    const themeNames: Record<Theme, string> = {
+      'light': translations.light,
+      'dark': translations.dark,
+      'light-blue': translations.lightBlue,
+      'light-purple': translations.lightPurple,
+      'light-green': translations.lightGreen,
+      'light-pink': translations.lightPink,
+      'light-white': translations.lightWhite,
+    };
+    return themeNames[theme] || theme;
+  };
+
+  const themes: Array<{ value: Theme; icon: string; color: string }> = [
+    { value: 'light', icon: 'fas fa-sun', color: '#FFF4E6' },
+    { value: 'dark', icon: 'fas fa-moon', color: '#1a1a2e' },
+    { value: 'light-blue', icon: 'fas fa-cloud', color: '#E6F3FF' },
+    { value: 'light-purple', icon: 'fas fa-gem', color: '#F0E6FF' },
+    { value: 'light-green', icon: 'fas fa-leaf', color: '#E6FFE6' },
+    { value: 'light-pink', icon: 'fas fa-heart', color: '#FFE6F0' },
+    { value: 'light-white', icon: 'fas fa-snowflake', color: '#FFFFFF' },
+  ];
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'ja' : 'en');
@@ -207,22 +220,22 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
           <div className="settings-section">
             <label className="settings-label">{t.theme}</label>
             <div className="settings-theme-selector">
-              <button
-                type="button"
-                className={`settings-theme-option ${theme === 'light' ? 'active' : ''}`}
-                onClick={() => handleThemeChange('light')}
-              >
-                <i className="fas fa-sun"></i>
-                <span>{t.light}</span>
-              </button>
-              <button
-                type="button"
-                className={`settings-theme-option ${theme === 'dark' ? 'active' : ''}`}
-                onClick={() => handleThemeChange('dark')}
-              >
-                <i className="fas fa-moon"></i>
-                <span>{t.dark}</span>
-              </button>
+              {themes.map((themeOption) => (
+                <button
+                  key={themeOption.value}
+                  type="button"
+                  className={`settings-theme-option ${currentTheme === themeOption.value ? 'active' : ''}`}
+                  onClick={() => handleThemeChange(themeOption.value)}
+                  title={getThemeDisplayName(themeOption.value, t)}
+                >
+                  <span 
+                    className="theme-color-preview" 
+                    style={{ backgroundColor: themeOption.color }}
+                  ></span>
+                  <i className={themeOption.icon}></i>
+                  <span>{getThemeDisplayName(themeOption.value, t)}</span>
+                </button>
+              ))}
             </div>
             <p className="settings-description">
               {t.themeDescription}
