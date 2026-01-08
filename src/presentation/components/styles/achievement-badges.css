@@ -160,46 +160,7 @@
   transform: translateY(-50%);
 }
 
-/* Tooltip arrow - pointing left */
-.achievement-badge-tooltip::after {
-  content: '';
-  position: absolute;
-  right: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 6px solid transparent;
-  border-right-color: var(--bg-card-hover);
-}
-
-.achievement-badge-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 7px solid transparent;
-  border-right-color: var(--border-primary);
-  margin-right: -1px;
-}
-
-/* Arrow for rightmost badges - pointing right */
-.achievement-badges-list .achievement-badge-compact:last-child .achievement-badge-tooltip::after {
-  right: auto;
-  left: 100%;
-  transform: translateY(-50%);
-  border-right-color: transparent;
-  border-left-color: var(--bg-card-hover);
-}
-
-.achievement-badges-list .achievement-badge-compact:last-child .achievement-badge-tooltip::before {
-  right: auto;
-  left: 100%;
-  transform: translateY(-50%);
-  border-right-color: transparent;
-  border-left-color: var(--border-primary);
-  margin-right: 0;
-  margin-left: -1px;
-}
+/* Tooltip arrow removed */
 
 .achievement-badge-tooltip-name {
   display: block;
