@@ -1,0 +1,10 @@
+/* GitHub content script styles */
+#github-dashboard-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+#github-dashboard-root {
+  width: 100%;
+}
+

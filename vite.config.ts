@@ -58,11 +58,15 @@ export default defineConfig({
         newtab: resolve(__dirname, 'src/presentation/newtab/index.html'),
         options: resolve(__dirname, 'src/presentation/options/index.html'),
         'service-worker': resolve(__dirname, 'src/infrastructure/background/service-worker.ts'),
+        'github-content': resolve(__dirname, 'src/infrastructure/content/github-content.ts'),
       },
       output: {
         entryFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'service-worker') {
             return 'service-worker.js';
+          }
+          if (chunkInfo.name === 'github-content') {
+            return 'assets/github-content.js';
           }
           return 'assets/[name].js';
         },
@@ -78,6 +82,15 @@ export default defineConfig({
             if (source.includes('options')) {
               return 'options.html';
             }
+          }
+          // Handle CSS files
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+            // Check if it's from github-content
+            const source = assetInfo.source || '';
+            if (source.includes('github-content') || assetInfo.name.includes('github-content')) {
+              return 'assets/github-content.css';
+            }
+            return 'assets/[name].[ext]';
           }
           return 'assets/[name].[ext]';
         },

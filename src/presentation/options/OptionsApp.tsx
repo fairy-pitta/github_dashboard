@@ -8,6 +8,7 @@ import './styles/options.css';
 
 export const OptionsApp: React.FC = () => {
   const [token, setToken] = useState('');
+  const [showOnGitHub, setShowOnGitHub] = useState(true);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{
     type: 'success' | 'error' | 'info';
@@ -15,12 +16,14 @@ export const OptionsApp: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    // Load saved token
-    const loadToken = async () => {
+    // Load saved token and settings
+    const loadSettings = async () => {
       try {
         const container = Container.getInstance();
         const storage = container.getStorage();
         const savedToken = await storage.get<string>(StorageKeys.PAT_TOKEN);
+        const savedShowOnGitHub = await storage.get<boolean>(StorageKeys.SHOW_ON_GITHUB);
+        
         if (savedToken) {
           setToken(savedToken);
           // Initialize container if token exists
@@ -30,11 +33,15 @@ export const OptionsApp: React.FC = () => {
             // Ignore initialization errors
           }
         }
+        
+        if (savedShowOnGitHub !== undefined) {
+          setShowOnGitHub(savedShowOnGitHub);
+        }
       } catch {
         // Ignore errors
       }
     };
-    loadToken();
+    loadSettings();
   }, []);
 
   const handleSave = async () => {
@@ -81,6 +88,25 @@ export const OptionsApp: React.FC = () => {
     setStatus(null);
   };
 
+  const handleToggleShowOnGitHub = async () => {
+    const newValue = !showOnGitHub;
+    setShowOnGitHub(newValue);
+    try {
+      const container = Container.getInstance();
+      const storage = container.getStorage();
+      await storage.set(StorageKeys.SHOW_ON_GITHUB, newValue);
+      setStatus({
+        type: 'success',
+        message: newValue
+          ? 'Dashboard will now show on GitHub pages. Please refresh any open GitHub tabs.'
+          : 'Dashboard disabled on GitHub pages.',
+      });
+    } catch (error) {
+      console.error('Failed to save setting:', error);
+      setShowOnGitHub(!newValue); // Revert on error
+    }
+  };
+
   return (
     <div className="options-container">
       <div className="options-content">
@@ -102,6 +128,21 @@ export const OptionsApp: React.FC = () => {
             loading={loading}
             disabled={!token.trim()}
           />
+
+          <div className="options-setting">
+            <label className="options-setting-label">
+              <input
+                type="checkbox"
+                checked={showOnGitHub}
+                onChange={handleToggleShowOnGitHub}
+                className="options-checkbox"
+              />
+              <span>Show dashboard on GitHub pages</span>
+            </label>
+            <p className="options-setting-description">
+              When enabled, the dashboard will replace GitHub pages. You can revert to the original GitHub page using the button in the top-right corner.
+            </p>
+          </div>
 
           {status && (
             <StatusMessage
