@@ -1,108 +1,106 @@
-# Chrome拡張機能のセットアップ手順
+# Chrome Extension Setup Guide
 
-実際にChrome拡張機能を動作させるための手順です。
+Step-by-step instructions to get the Chrome extension running.
 
-## 1. 依存関係のインストール
+## 1. Install Dependencies
 
-ターミナルでプロジェクトディレクトリに移動して、以下を実行してください：
+Navigate to the project directory in your terminal and run:
 
 ```bash
 cd /Users/shuna/github-expansion
 npm install
 ```
 
-## 2. ビルド
+## 2. Build
 
-拡張機能をビルドします：
+Build the extension:
 
 ```bash
 npm run build
 ```
 
-ビルドが成功すると、`dist` ディレクトリに拡張機能のファイルが生成されます。
+After a successful build, the extension files will be generated in the `dist` directory.
 
-## 3. Chromeに拡張機能を読み込む
+## 3. Load the Extension in Chrome
 
-1. **Chromeを開く**
-2. **拡張機能ページを開く**
-   - アドレスバーに `chrome://extensions/` と入力してEnter
-   - または、メニュー → その他のツール → 拡張機能
-3. **デベロッパーモードを有効化**
-   - ページ右上の「デベロッパーモード」トグルをONにする
-4. **拡張機能を読み込む**
-   - 「パッケージ化されていない拡張機能を読み込む」ボタンをクリック
-   - `dist` ディレクトリを選択
-   - `/Users/shuna/github-expansion/dist` を選択
+1. **Open Chrome**
+2. **Open the Extensions page**
+   - Type `chrome://extensions/` in the address bar and press Enter
+   - Or, go to Menu → More tools → Extensions
+3. **Enable Developer mode**
+   - Toggle "Developer mode" ON in the top-right corner of the page
+4. **Load the extension**
+   - Click "Load unpacked"
+   - Select the `dist` directory
+   - Select `/Users/shuna/github-expansion/dist`
 
-## 4. 拡張機能の設定
+## 4. Configure the Extension
 
-1. **新しいタブを開く**
-   - 新しいタブを開くと、GitHub Dashboardが表示されます
-   - 最初は認証が必要なので、設定画面が表示されます
-2. **Personal Access Tokenを設定**
-   - 拡張機能のアイコンをクリック → 「オプション」を選択
-   - または、`chrome://extensions/` で拡張機能の「詳細」→「拡張機能のオプション」
-   - GitHub Personal Access Tokenを入力して保存
+1. **Open a new tab**
+   - When you open a new tab, the GitHub Dashboard will be displayed
+   - Authentication is required initially, so the settings screen will appear
+2. **Set up Personal Access Token**
+   - Click the extension icon → Select "Options"
+   - Or, go to `chrome://extensions/` → Click "Details" on the extension → "Extension options"
+   - Enter your GitHub Personal Access Token and save
 
-### GitHub Personal Access Tokenの取得方法
+### How to Get a GitHub Personal Access Token
 
-1. GitHubにログイン
-2. Settings → Developer settings → Personal access tokens → Tokens (classic)
-3. 「Generate new token (classic)」をクリック
-4. 必要な権限を選択：
-   - `repo` (プライベートリポジトリへのアクセス)
-   - `read:org` (組織リポジトリへのアクセス)
-   - `read:user` (ユーザー情報の読み取り)
-5. トークンを生成してコピー
-6. 拡張機能のオプションページに貼り付けて保存
+1. Log in to GitHub
+2. Go to Settings → Developer settings → Personal access tokens → Tokens (classic)
+3. Click "Generate new token (classic)"
+4. Select the required permissions:
+   - `repo` (for private repositories)
+   - `read:org` (for organization repositories)
+   - `read:user` (for reading user information)
+5. Generate and copy the token
+6. Paste it into the extension's options page and save
 
-## 5. 動作確認
+## 5. Verify Operation
 
-- 新しいタブを開くと、GitHub Dashboardが表示されます
-- 以下の情報が表示されます：
-  - **Pull Requests (Created by Me)**: 自分が作成したPR
-  - **Pull Requests (Review Requested)**: レビュー依頼されたPR
-  - **Issues (Involved)**: 関与しているIssue
-  - **Recently Updated Repositories**: 最近更新されたリポジトリ
+- When you open a new tab, the GitHub Dashboard will be displayed
+- The following information will be shown:
+  - **Pull Requests (Created by Me)**: PRs you created
+  - **Pull Requests (Review Requested)**: PRs that need your review
+  - **Issues (Involved)**: Issues you're involved with
+  - **Recently Updated Repositories**: Recently updated repositories
 
-## 開発モード（ホットリロード）
+## Development Mode (Hot Reload)
 
-コードを変更しながら開発する場合：
+To develop while making code changes:
 
 ```bash
 npm run dev
 ```
 
-このコマンドはファイルの変更を監視し、自動的に再ビルドします。
-Chrome拡張機能のページで「再読み込み」ボタンをクリックすると、変更が反映されます。
+This command watches for file changes and automatically rebuilds.
+Click the "Reload" button on the Chrome extensions page to see your changes.
 
-## トラブルシューティング
+## Troubleshooting
 
-### ビルドエラーが発生する場合
+### If Build Errors Occur
 
 ```bash
-# 依存関係を再インストール
+# Reinstall dependencies
 rm -rf node_modules package-lock.json
 npm install
 npm run build
 ```
 
-### 拡張機能が読み込めない場合
+### If the Extension Won't Load
 
-- `dist` ディレクトリが正しく生成されているか確認
-- `dist/manifest.json` が存在するか確認
-- Chromeのコンソール（F12）でエラーを確認
+- Verify that the `dist` directory was generated correctly
+- Check that `dist/manifest.json` exists
+- Check for errors in Chrome's console (F12)
 
-### データが表示されない場合
+### If Data Doesn't Display
 
-- Personal Access Tokenが正しく設定されているか確認
-- トークンに必要な権限（`repo`, `read:org`, `read:user`）があるか確認
-- ブラウザのコンソール（F12）でエラーメッセージを確認
+- Verify that the Personal Access Token is set correctly
+- Check that the token has the required permissions (`repo`, `read:org`, `read:user`)
+- Check for error messages in the browser console (F12)
 
-## 便利な機能
+## Useful Features
 
-- **リフレッシュ**: ヘッダーのリフレッシュボタンをクリック、または `r` キーを押す
-- **フィルター**: 「All」と「Open Only」を切り替え可能
-- **設定**: ヘッダーの⚙️ボタンから設定ページにアクセス
-
-
+- **Refresh**: Click the refresh button in the header, or press the `r` key
+- **Filter**: Toggle between "All" and "Open Only"
+- **Settings**: Access the settings page from the ⚙️ button in the header
