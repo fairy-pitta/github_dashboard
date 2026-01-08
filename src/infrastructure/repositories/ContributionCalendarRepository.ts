@@ -53,9 +53,14 @@ export class ContributionCalendarRepository implements IContributionCalendarRepo
     );
 
     const collection = response.viewer.contributionsCollection;
+    
+    if (!collection || !collection.contributionCalendar) {
+      throw new Error('No contribution calendar data returned from API');
+    }
+
     return ContributionCalendar.fromPlain({
-      totalContributions: collection.totalContributions,
-      weeks: collection.contributionCalendar.weeks,
+      totalContributions: collection.totalContributions || 0,
+      weeks: collection.contributionCalendar.weeks || [],
     });
   }
 }

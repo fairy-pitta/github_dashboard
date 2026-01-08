@@ -15,6 +15,7 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
   const { t } = useLanguage();
   const [calendar, setCalendar] = useState<ContributionCalendar | null>(null);
   const [calendarLoading, setCalendarLoading] = useState(true);
+  const [calendarError, setCalendarError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -25,12 +26,18 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
     const fetchCalendar = async () => {
       try {
         setCalendarLoading(true);
+        setCalendarError(null);
         const container = Container.getInstance();
         const calendarRepo = container.getContributionCalendarRepository();
         
-        // Get last year's contributions
+        // Get last year's contributions (exactly 365 days ago to now)
         const now = new Date();
-        const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+        const oneYearAgo = new Date(now);
+        oneYearAgo.setFullYear(now.getFullYear() - 1);
+        // Set to start of day for consistency
+        oneYearAgo.setHours(0, 0, 0, 0);
+        now.setHours(23, 59, 59, 999);
+        
         const calendarData = await calendarRepo.getCalendar(
           oneYearAgo.toISOString(),
           now.toISOString()
@@ -38,6 +45,9 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
         setCalendar(calendarData);
       } catch (error) {
         console.error('Failed to fetch contribution calendar:', error);
+        setCalendarError(
+          error instanceof Error ? error.message : 'Failed to load contribution calendar'
+        );
       } finally {
         setCalendarLoading(false);
       }
@@ -100,7 +110,13 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
           <div className="contribution-calendar-loading">
             <SkeletonLoader count={1} />
           </div>
-        ) : calendar ? (
+        ) : calendarError ? (
+          <div className="contribution-calendar-error">
+            <p style={{ color: 'var(--text-color-secondary)', fontSize: '0.875rem' }}>
+              {calendarError}
+            </p>
+          </div>
+        ) : calendar && calendar.weeks.length > 0 ? (
           <div className="contribution-calendar">
             <div className="contribution-grid">
               {displayDays.map((day, index) => (
