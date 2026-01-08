@@ -1,6 +1,6 @@
 import React from 'react';
 import { RateLimitError, AuthenticationError, PermissionError, NetworkError } from '@/domain/errors/DomainError';
-import { useLanguage } from '../../i18n/useLanguage';
+import { useLanguage } from '../i18n/useLanguage';
 import './styles/error.css';
 
 interface ErrorMessageProps {

@@ -2,7 +2,7 @@ import React from 'react';
 import { PullRequest } from '@/domain/entities/PullRequest';
 import { PRCard } from './PRCard';
 import { SkeletonLoader } from './SkeletonLoader';
-import { useLanguage } from '../../i18n/useLanguage';
+import { useLanguage } from '../i18n/useLanguage';
 import './styles/section.css';
 
 interface CreatedPRSectionProps {

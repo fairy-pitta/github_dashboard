@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLanguage } from '../../i18n/useLanguage';
+import { useLanguage } from '../i18n/useLanguage';
 import './styles/loading.css';
 
 interface LoadingSpinnerProps {

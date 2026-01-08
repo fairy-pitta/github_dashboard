@@ -2,7 +2,7 @@ import React from 'react';
 import { Issue } from '@/domain/entities/Issue';
 import { IssueCard } from './IssueCard';
 import { SkeletonLoader } from './SkeletonLoader';
-import { useLanguage } from '../../i18n/useLanguage';
+import { useLanguage } from '../i18n/useLanguage';
 import './styles/section.css';
 
 interface IssueSectionProps {
