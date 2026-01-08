@@ -1,9 +1,6 @@
-// Content script for GitHub pages
-// This script replaces GitHub page content with the dashboard
 import './github-content.css';
 
 let dashboardEnabled = false;
-let originalHTML: string | null = null;
 let dashboardContainer: HTMLElement | null = null;
 
 async function checkDashboardEnabled(): Promise<boolean> {
@@ -41,9 +38,6 @@ async function initDashboard() {
   // Wait for body to be available
   const body = await waitForBody();
 
-  // Store original HTML
-  originalHTML = document.documentElement.outerHTML;
-
   // Create iframe for dashboard (isolated world with Chrome API access)
   const iframe = document.createElement('iframe');
   iframe.id = 'github-dashboard-iframe';
@@ -66,10 +60,8 @@ async function initDashboard() {
 }
 
 function revertToOriginal() {
-  if (originalHTML && document.documentElement) {
-    // Reload the page to restore original GitHub content
-    window.location.reload();
-  }
+  // Reload the page to restore original GitHub content
+  window.location.reload();
 }
 
 // Listen for storage changes
@@ -87,7 +79,6 @@ chrome.storage.onChanged.addListener((changes) => {
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initDashboard);
-} else {
-  initDashboard();
-}
-
+  } else {
+    initDashboard();
+  }
