@@ -1,0 +1,141 @@
+.profile-section {
+  grid-column: 1 / -1;
+  margin-bottom: 1.5rem;
+}
+
+.profile-content {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  object-fit: cover;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.profile-username {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+  margin: 0 0 0.5rem 0;
+}
+
+.profile-contributions {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+  margin: 0;
+}
+
+.contribution-calendar-loading {
+  margin-top: 1rem;
+}
+
+.contribution-calendar {
+  margin-top: 1.5rem;
+}
+
+.contribution-grid {
+  display: grid;
+  grid-template-columns: repeat(53, 1fr);
+  gap: 2px;
+  margin-bottom: 1rem;
+}
+
+.contribution-day {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.contribution-day:hover {
+  opacity: 0.8;
+}
+
+.contribution-day.level-0 {
+  background-color: var(--contribution-level-0) !important;
+}
+
+.contribution-day.level-1 {
+  background-color: var(--contribution-level-1) !important;
+}
+
+.contribution-day.level-2 {
+  background-color: var(--contribution-level-2) !important;
+}
+
+.contribution-day.level-3 {
+  background-color: var(--contribution-level-3) !important;
+}
+
+.contribution-day.level-4 {
+  background-color: var(--contribution-level-4) !important;
+}
+
+.contribution-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+.legend-levels {
+  display: flex;
+  gap: 2px;
+}
+
+.legend-level {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.legend-level.level-0 {
+  background-color: var(--contribution-level-0);
+}
+
+.legend-level.level-1 {
+  background-color: var(--contribution-level-1);
+}
+
+.legend-level.level-2 {
+  background-color: var(--contribution-level-2);
+}
+
+.legend-level.level-3 {
+  background-color: var(--contribution-level-3);
+}
+
+.legend-level.level-4 {
+  background-color: var(--contribution-level-4);
+}
+
+.legend-label {
+  font-size: 0.75rem;
+}
+
