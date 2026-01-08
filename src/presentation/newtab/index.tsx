@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { NewTabApp } from './NewTabApp';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-import { LanguageProvider } from '../i18n/useLanguage';
+import { LanguageProvider } from '../i18n/LanguageProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
