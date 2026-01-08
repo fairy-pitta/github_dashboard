@@ -110,6 +110,10 @@ export interface Translations {
   statsReviews: string;
   statsIssues: string;
   close: string;
+  
+  // Repository actions
+  createPR: string;
+  createIssue: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -198,6 +202,8 @@ export const translations: Record<Language, Translations> = {
     statsReviews: 'Reviews',
     statsIssues: 'Issues',
     close: 'Close',
+    createPR: 'Create PR',
+    createIssue: 'Create Issue',
   },
   ja: {
     dashboardTitle: 'GitHub ダッシュボード',
@@ -284,6 +290,8 @@ export const translations: Record<Language, Translations> = {
     statsReviews: 'レビュー',
     statsIssues: 'イシュー',
     close: '閉じる',
+    createPR: 'PRを作成',
+    createIssue: 'Issueを作成',
   },
 };
 
