@@ -73,7 +73,8 @@ export function useDashboardData(
 
   useEffect(() => {
     fetchData(false);
-  }, [fetchData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [limit, filterOpenOnly]);
 
   const refresh = useCallback(async () => {
     await fetchData(true);
