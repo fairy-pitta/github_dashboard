@@ -159,28 +159,6 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
                 </a>
               </div>
             )}
-            {user.organizations.length > 0 && (
-              <div className="profile-organizations">
-                <span className="organizations-label">{t.organizations}:</span>
-                <div className="organizations-list">
-                  {user.organizations.map((org) => (
-                    <a
-                      key={org.login}
-                      href={`https://github.com/${org.login}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="organization-badge"
-                      title={org.name || org.login}
-                    >
-                      {org.avatarUrl && (
-                        <img src={org.avatarUrl} alt={org.login} className="org-avatar" />
-                      )}
-                      <span>{org.name || org.login}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         )}
         {calendarLoading ? (
