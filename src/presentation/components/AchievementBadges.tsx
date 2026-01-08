@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { AchievementBadge } from '@/domain/entities/AchievementBadge';
 import { useLanguage } from '../i18n/useLanguage';
@@ -25,71 +25,53 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({ badges, lo
     setNewlyAchieved(achievedIds);
   }, [badges]);
 
-  const handleBadgeMouseEnter = (badgeId: string, event: React.MouseEvent<HTMLSpanElement>) => {
+  const updateTooltipPosition = useCallback((badgeId: string) => {
     const badgeElement = badgeRefs.current.get(badgeId);
     if (!badgeElement) return;
 
-    const rect = badgeElement.getBoundingClientRect();
+    const badgeRect = badgeElement.getBoundingClientRect();
+    const badgeCenterX = badgeRect.left + badgeRect.width / 2;
     const spacing = 8;
-    const badgeCenterX = rect.left + rect.width / 2;
 
-    // Use a reasonable default size, will be adjusted after render
-    const tooltipWidth = 200;
-    const tooltipHeight = 100;
+    // Get tooltip size if available, otherwise use defaults
+    const tooltipWidth = tooltipRef.current?.offsetWidth || 200;
+    const tooltipHeight = tooltipRef.current?.offsetHeight || 100;
 
     // Calculate position: above the badge, centered
     let left = badgeCenterX - tooltipWidth / 2;
-    const top = rect.top - tooltipHeight - spacing;
+    let top = badgeRect.top - tooltipHeight - spacing;
 
-    // Adjust if tooltip would go off screen
-    let adjustedLeft = left;
+    // Adjust if tooltip would go off screen horizontally
     if (left < 10) {
-      adjustedLeft = 10;
+      left = 10;
     } else if (left + tooltipWidth > window.innerWidth - 10) {
-      adjustedLeft = window.innerWidth - tooltipWidth - 10;
+      left = window.innerWidth - tooltipWidth - 10;
+    }
+
+    // Adjust if tooltip would go off screen vertically (show below instead)
+    if (top < 10) {
+      top = badgeRect.bottom + spacing;
     }
 
     // Calculate arrow position relative to tooltip
-    const arrowLeft = badgeCenterX - adjustedLeft;
+    const arrowLeft = badgeCenterX - left;
 
-    setTooltipPosition({ top, left: adjustedLeft, arrowLeft });
+    setTooltipPosition({ top, left, arrowLeft });
+  }, []);
+
+  const handleBadgeMouseEnter = useCallback((badgeId: string) => {
     setHoveredBadge(badgeId);
-  };
+  }, []);
 
   // Adjust tooltip position after it's rendered to account for actual size
   useEffect(() => {
-    if (!tooltipRef.current || !hoveredBadge) return;
+    if (!hoveredBadge) return;
 
     // Use requestAnimationFrame to ensure tooltip is rendered
     requestAnimationFrame(() => {
-      if (!tooltipRef.current || !hoveredBadge) return;
-
-      const tooltipRect = tooltipRef.current.getBoundingClientRect();
-      const badgeElement = badgeRefs.current.get(hoveredBadge);
-      if (!badgeElement) return;
-
-      const badgeRect = badgeElement.getBoundingClientRect();
-      const badgeCenterX = badgeRect.left + badgeRect.width / 2;
-      const spacing = 8;
-
-      // Recalculate position with actual tooltip size
-      let left = badgeCenterX - tooltipRect.width / 2;
-      const top = badgeRect.top - tooltipRect.height - spacing;
-
-      // Adjust if tooltip would go off screen
-      let adjustedLeft = left;
-      if (left < 10) {
-        adjustedLeft = 10;
-      } else if (left + tooltipRect.width > window.innerWidth - 10) {
-        adjustedLeft = window.innerWidth - tooltipRect.width - 10;
-      }
-
-      // Recalculate arrow position
-      const arrowLeft = badgeCenterX - adjustedLeft;
-
-      setTooltipPosition({ top, left: adjustedLeft, arrowLeft });
+      updateTooltipPosition(hoveredBadge);
     });
-  }, [hoveredBadge]);
+  }, [hoveredBadge, updateTooltipPosition]);
 
   const handleBadgeMouseLeave = () => {
     setHoveredBadge(null);

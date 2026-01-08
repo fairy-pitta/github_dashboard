@@ -119,18 +119,21 @@
 .achievement-badge-tooltip-fixed {
   position: fixed !important;
   opacity: 1 !important;
-  transform: translateY(-4px) !important;
+  transform: none !important;
   z-index: 99999 !important;
+  margin: 0 !important;
 }
 
 .achievement-badge-tooltip-fixed::after {
   left: var(--arrow-left, 50%) !important;
   transform: translateX(-50%) !important;
+  top: 100% !important;
 }
 
 .achievement-badge-tooltip-fixed::before {
   left: var(--arrow-left, 50%) !important;
   transform: translateX(-50%) !important;
+  top: 100% !important;
 }
 
 /* Adjust tooltip position for leftmost badges */
