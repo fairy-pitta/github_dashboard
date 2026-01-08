@@ -6,6 +6,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { useAuth } from './hooks/useAuth';
 import { useDashboardData } from './hooks/useDashboardData';
+import { useTheme } from './hooks/useTheme';
 import './styles/newtab.css';
 
 // Lazy load sections for code splitting
@@ -32,7 +33,8 @@ const RepositorySection = lazy(() =>
 
 export const NewTabApp: React.FC = () => {
   const auth = useAuth();
-  const [filter, setFilter] = useState<'all' | 'open'>('all');
+  const { loading: themeLoading } = useTheme(); // Initialize theme
+  const [filter, setFilter] = useState<'all' | 'open'>('open'); // Default to 'open'
   const dashboard = useDashboardData(10, filter === 'open', !auth.loading && auth.isAuthenticated);
 
   const handleRefresh = useCallback(async () => {
@@ -66,7 +68,7 @@ export const NewTabApp: React.FC = () => {
   if (auth.loading) {
     return (
       <div className="dashboard-container">
-        <LoadingSpinner size="large" message="Loading..." />
+        <LoadingSpinner size="large" />
       </div>
     );
   }
@@ -89,20 +91,20 @@ export const NewTabApp: React.FC = () => {
       )}
 
       {dashboard.loading && !dashboard.data ? (
-        <LoadingSpinner size="large" message="Loading dashboard data..." />
+        <LoadingSpinner size="large" />
       ) : (
         <DashboardLayout>
-          <Suspense fallback={<LoadingSpinner size="small" message="Loading..." />}>
+          <Suspense fallback={<LoadingSpinner size="small" />}>
+            <RepositorySection
+              repositories={dashboard.data?.recentlyUpdatedRepos ?? []}
+              loading={dashboard.loading}
+            />
             <CreatedPRSection prs={dashboard.data?.createdPRs ?? []} loading={dashboard.loading} />
             <ReviewRequestedPRSection
               prs={dashboard.data?.reviewRequestedPRs ?? []}
               loading={dashboard.loading}
             />
             <IssueSection issues={dashboard.data?.involvedIssues ?? []} loading={dashboard.loading} />
-            <RepositorySection
-              repositories={dashboard.data?.recentlyUpdatedRepos ?? []}
-              loading={dashboard.loading}
-            />
           </Suspense>
         </DashboardLayout>
       )}
