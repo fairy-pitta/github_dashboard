@@ -20,12 +20,20 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
   const { t, language, setLanguage } = useLanguage();
+  const isInIframe = window.self !== window.top;
+  
   const openOptions = () => {
     chrome.runtime.openOptionsPage();
   };
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'ja' : 'en');
+  };
+
+  const revertToGitHub = () => {
+    if (isInIframe && window.top) {
+      window.top.location.reload();
+    }
   };
 
   return (
@@ -36,6 +44,17 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="header-right">
         <FilterToggle value={filter} onChange={onFilterChange} disabled={refreshing} />
         <RefreshButton onClick={onRefresh} loading={refreshing} />
+        {isInIframe && (
+          <button
+            onClick={revertToGitHub}
+            className="revert-button"
+            aria-label={t.revertToGitHub}
+            title={t.revertToGitHub}
+          >
+            <i className="fas fa-arrow-left"></i>
+            <span>{t.revertToGitHub}</span>
+          </button>
+        )}
         <button
           onClick={toggleLanguage}
           className="language-toggle-button"

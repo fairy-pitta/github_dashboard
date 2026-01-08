@@ -44,33 +44,6 @@ async function initDashboard() {
   // Store original HTML
   originalHTML = document.documentElement.outerHTML;
 
-  // Create revert button (outside iframe)
-  const revertButton = document.createElement('div');
-  revertButton.id = 'github-dashboard-revert';
-  revertButton.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 10000;
-    background: #fff;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    padding: 8px 16px;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  `;
-  revertButton.textContent = '← Revert to GitHub';
-  revertButton.addEventListener('click', revertToOriginal);
-  revertButton.addEventListener('mouseenter', () => {
-    revertButton.style.background = '#f3f4f6';
-  });
-  revertButton.addEventListener('mouseleave', () => {
-    revertButton.style.background = '#fff';
-  });
-
   // Create iframe for dashboard (isolated world with Chrome API access)
   const iframe = document.createElement('iframe');
   iframe.id = 'github-dashboard-iframe';
@@ -89,7 +62,6 @@ async function initDashboard() {
   // Replace body content
   body.innerHTML = '';
   body.appendChild(iframe);
-  body.appendChild(revertButton);
   dashboardContainer = body;
 }
 

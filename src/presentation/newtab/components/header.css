@@ -31,7 +31,8 @@
 
 .settings-button,
 .theme-toggle-button,
-.language-toggle-button {
+.language-toggle-button,
+.revert-button {
   padding: 0;
   font-size: 16px;
   background: var(--bg-button);
@@ -42,15 +43,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
   backdrop-filter: blur(10px);
   color: var(--text-primary);
 }
 
+.settings-button,
+.theme-toggle-button,
+.language-toggle-button {
+  width: 40px;
+  height: 40px;
+}
+
+.revert-button {
+  padding: 8px 16px;
+  gap: 8px;
+  white-space: nowrap;
+}
+
 .settings-button:hover,
 .theme-toggle-button:hover,
-.language-toggle-button:hover {
+.language-toggle-button:hover,
+.revert-button:hover {
   background: var(--bg-button-hover);
   border-color: var(--border-button-hover);
   transform: translateY(-2px);
@@ -62,6 +75,15 @@
 .theme-toggle-button i,
 .language-toggle-button i {
   font-size: 16px;
+}
+
+.revert-button i {
+  font-size: 14px;
+}
+
+.revert-button span {
+  font-size: 14px;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {

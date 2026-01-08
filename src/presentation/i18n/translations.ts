@@ -6,6 +6,7 @@ export interface Translations {
   refresh: string;
   refreshing: string;
   settings: string;
+  revertToGitHub: string;
   
   // Filter
   all: string;
@@ -70,6 +71,7 @@ export const translations: Record<Language, Translations> = {
     refresh: 'Refresh',
     refreshing: 'Refreshing...',
     settings: 'Settings',
+    revertToGitHub: 'Revert to GitHub',
     all: 'All',
     openOnly: 'Open Only',
     repositories: 'Repositories',
@@ -118,6 +120,7 @@ export const translations: Record<Language, Translations> = {
     refresh: '更新',
     refreshing: '更新中...',
     settings: '設定',
+    revertToGitHub: 'GitHubに戻る',
     all: 'すべて',
     openOnly: 'オープンのみ',
     repositories: 'リポジトリ',
