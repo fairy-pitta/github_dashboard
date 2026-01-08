@@ -27,9 +27,7 @@ export default defineConfig({
       closeBundle() {
         const distDir = resolve(__dirname, 'dist');
         const newtabSrc = join(distDir, 'src/presentation/newtab/index.html');
-        const optionsSrc = join(distDir, 'src/presentation/options/index.html');
         const newtabDest = join(distDir, 'newtab.html');
-        const optionsDest = join(distDir, 'options.html');
 
         // Copy and fix newtab.html
         if (existsSync(newtabSrc)) {
@@ -39,15 +37,6 @@ export default defineConfig({
           content = content.replace(/(src|href)="\/assets\//g, '$1="./assets/');
           writeFileSync(newtabDest, content);
         }
-
-        // Copy and fix options.html
-        if (existsSync(optionsSrc)) {
-          let content = readFileSync(optionsSrc, 'utf-8');
-          // Fix relative paths
-          content = content.replace(/(src|href)="(\.\.\/)+assets\//g, '$1="./assets/');
-          content = content.replace(/(src|href)="\/assets\//g, '$1="./assets/');
-          writeFileSync(optionsDest, content);
-        }
       },
     },
   ],
@@ -56,16 +45,16 @@ export default defineConfig({
     rollupOptions: {
       input: {
         newtab: resolve(__dirname, 'src/presentation/newtab/index.html'),
-        options: resolve(__dirname, 'src/presentation/options/index.html'),
         'service-worker': resolve(__dirname, 'src/infrastructure/background/service-worker.ts'),
         'github-content': resolve(__dirname, 'src/infrastructure/content/github-content.ts'),
       },
       output: {
         entryFileNames: (chunkInfo) => {
-          if (chunkInfo.name === 'service-worker') {
+          const name = chunkInfo.name || '';
+          if (name === 'service-worker') {
             return 'service-worker.js';
           }
-          if (chunkInfo.name === 'github-content') {
+          if (name === 'github-content') {
             return 'assets/github-content.js';
           }
           return 'assets/[name].js';
@@ -75,18 +64,15 @@ export default defineConfig({
           // Handle HTML files - output them directly to dist root with correct names
           if (assetInfo.name && assetInfo.name.endsWith('.html')) {
             // Extract the entry name from the source path
-            const source = assetInfo.source || '';
+            const source = String(assetInfo.source || '');
             if (source.includes('newtab')) {
               return 'newtab.html';
-            }
-            if (source.includes('options')) {
-              return 'options.html';
             }
           }
           // Handle CSS files
           if (assetInfo.name && assetInfo.name.endsWith('.css')) {
             // Check if it's from github-content
-            const source = assetInfo.source || '';
+            const source = String(assetInfo.source || '');
             if (source.includes('github-content') || assetInfo.name.includes('github-content')) {
               return 'assets/github-content.css';
             }
