@@ -36,6 +36,13 @@ export interface Translations {
   createPATInstructions: string;
   createPATLink: string;
   requiredPermissions: string;
+  signInWithGitHub: string;
+  oauthAuthenticating: string;
+  oauthError: string;
+  oauthSuccess: string;
+  oauthCanceled: string;
+  oauthInstructions: string;
+  manualTokenInput: string;
   
   // Options
   settingsTitle: string;
@@ -193,6 +200,13 @@ export const translations: Record<Language, Translations> = {
     createPATInstructions: 'To create a Personal Access Token:',
     createPATLink: 'Create a Personal Access Token',
     requiredPermissions: 'Required permissions: repo, read:org, read:user',
+    signInWithGitHub: 'Sign in with GitHub',
+    oauthAuthenticating: 'Authenticating...',
+    oauthError: 'Authentication failed',
+    oauthSuccess: 'Authentication successful',
+    oauthCanceled: 'Authentication canceled',
+    oauthInstructions: 'Click the button below to authenticate with GitHub using OAuth. This is the recommended method as it is more secure than manually entering a token.',
+    manualTokenInput: 'Manual Token Input',
     settingsTitle: 'GitHub Extension Settings',
     settingsDescription: 'Enter your GitHub Personal Access Token to enable the extension.',
     tokenLabel: 'GitHub Personal Access Token',
@@ -410,6 +424,13 @@ export const translations: Record<Language, Translations> = {
     createPATInstructions: 'Personal Access Token を作成するには:',
     createPATLink: 'Personal Access Token を作成',
     requiredPermissions: '必要な権限: repo, read:org, read:user',
+    signInWithGitHub: 'GitHubでログイン',
+    oauthAuthenticating: '認証中...',
+    oauthError: '認証に失敗しました',
+    oauthSuccess: '認証に成功しました',
+    oauthCanceled: '認証がキャンセルされました',
+    oauthInstructions: '下のボタンをクリックして、OAuthを使用してGitHubで認証します。これは、トークンを手動で入力するよりも安全な推奨方法です。',
+    manualTokenInput: '手動でトークンを入力',
     settingsTitle: 'GitHub 拡張機能の設定',
     settingsDescription: 'GitHub Personal Access Token を入力して拡張機能を有効にします。',
     tokenLabel: 'GitHub Personal Access Token',

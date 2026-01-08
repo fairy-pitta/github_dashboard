@@ -22,23 +22,14 @@ export const AuthGuard: React.FC = () => {
         <h1>{t.githubExtension}</h1>
         <p>{t.configureToken}</p>
         <div className="auth-guard-instructions">
-          <p className="auth-guard-step">
-            <strong>{t.createPATInstructions}</strong>
+          <p className="auth-guard-step" style={{ marginBottom: '16px' }}>
+            <strong>{t.oauthInstructions}</strong>
           </p>
-          <ol className="auth-guard-steps">
-            <li>
-              <a
-                href="https://github.com/settings/tokens/new"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="auth-guard-link"
-              >
-                {t.createPATLink}
-              </a>
-            </li>
-            <li>{t.requiredPermissions}</li>
-            <li>{t.language === 'en' ? 'Copy the token and paste it below' : 'トークンをコピーして、下に入力してください'}</li>
-          </ol>
+          <p className="auth-guard-step" style={{ marginTop: '16px', fontSize: '14px', color: '#586069' }}>
+            {t.language === 'en' 
+              ? 'Alternatively, you can manually enter a Personal Access Token in the settings.' 
+              : 'または、設定でPersonal Access Tokenを手動で入力することもできます。'}
+          </p>
         </div>
         <button onClick={() => setIsSettingsOpen(true)} className="configure-button">
           <i className="fas fa-cog"></i>

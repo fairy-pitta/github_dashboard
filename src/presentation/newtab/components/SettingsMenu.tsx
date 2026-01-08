@@ -5,6 +5,7 @@ import { SaveButton } from '../../options/components/SaveButton';
 import { StatusMessage } from '../../options/components/StatusMessage';
 import { Container } from '@/application/di/Container';
 import { StorageKeys } from '@/infrastructure/storage/StorageKeys';
+import { GitHubOAuthService } from '@/infrastructure/auth/GitHubOAuthService';
 import { useLanguage } from '../../i18n/useLanguage';
 import { useTheme, Theme } from '../hooks/useTheme';
 import './settings-menu.css';
@@ -21,6 +22,8 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
   const [showOnGitHub, setShowOnGitHub] = useState(true);
   const [showMotivationMessage, setShowMotivationMessage] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(false);
+  const [showManualTokenInput, setShowManualTokenInput] = useState(false);
   const [status, setStatus] = useState<{
     type: 'success' | 'error' | 'info';
     message: string;
@@ -60,6 +63,57 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
       loadSettings();
     }
   }, [isOpen, loadSettings]);
+
+  const handleOAuthAuthenticate = async () => {
+    setOauthLoading(true);
+    setStatus(null);
+
+    try {
+      // Use OAuthService directly since Container needs to be initialized with a token
+      const oauthService = new GitHubOAuthService();
+      const accessToken = await oauthService.authenticate();
+
+      // Initialize container with the OAuth token
+      const container = Container.getInstance();
+      await container.initialize(accessToken);
+
+      // Validate the token
+      const authService = container.getAuthService();
+      const user = await authService.validateCurrentToken();
+
+      if (!user) {
+        throw new Error('Failed to validate OAuth token');
+      }
+
+      setStatus({
+        type: 'success',
+        message: t.oauthSuccess,
+      });
+
+      // Close settings after successful authentication
+      setTimeout(() => {
+        onClose();
+        // Reload the page to reflect the authentication
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error('OAuth authentication error:', error);
+      let errorMessage = t.oauthError;
+      if (error instanceof Error) {
+        if (error.message.includes('canceled') || error.message.includes('cancel')) {
+          errorMessage = t.oauthCanceled;
+        } else {
+          errorMessage = `${t.oauthError}: ${error.message}`;
+        }
+      }
+      setStatus({
+        type: 'error',
+        message: errorMessage,
+      });
+    } finally {
+      setOauthLoading(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!token.trim()) {
@@ -192,36 +246,104 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
         <div className="settings-menu-content">
           <div className="settings-section">
             <h3>{t.tokenLabel}</h3>
-            <div className="settings-help-text">
-              <p>{t.createPATInstructions}</p>
-              <ol className="settings-steps">
-                <li>
-                  <a
-                    href="https://github.com/settings/tokens/new"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="settings-link"
-                  >
-                    {t.createPATLink}
-                  </a>
-                </li>
-                <li>{t.requiredPermissions}</li>
-                <li>{t.copyTokenInstruction}</li>
-              </ol>
+            
+            {/* OAuth Authentication Section */}
+            <div className="oauth-section">
+              <p className="oauth-instructions">{t.oauthInstructions}</p>
+              <button
+                onClick={handleOAuthAuthenticate}
+                disabled={oauthLoading || loading}
+                className="oauth-button"
+                style={{
+                  width: '100%',
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  color: '#fff',
+                  backgroundColor: oauthLoading ? '#ccc' : '#24292e',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: oauthLoading ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  marginBottom: '16px',
+                }}
+              >
+                {oauthLoading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i>
+                    <span>{t.oauthAuthenticating}</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="fab fa-github"></i>
+                    <span>{t.signInWithGitHub}</span>
+                  </>
+                )}
+              </button>
             </div>
-            <div style={{ marginTop: '20px' }}>
-              <TokenInput
-                value={token}
-                onChange={setToken}
-                error={status?.type === 'error' ? status.message : undefined}
-                disabled={loading}
-              />
+
+            {/* Manual Token Input Section (Collapsible) */}
+            <div className="manual-token-section">
+              <button
+                onClick={() => setShowManualTokenInput(!showManualTokenInput)}
+                className="manual-token-toggle"
+                style={{
+                  width: '100%',
+                  padding: '8px 16px',
+                  fontSize: '14px',
+                  color: '#586069',
+                  backgroundColor: 'transparent',
+                  border: '1px solid #e1e4e8',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  marginBottom: showManualTokenInput ? '16px' : '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <span>{t.manualTokenInput}</span>
+                <i className={`fas fa-chevron-${showManualTokenInput ? 'up' : 'down'}`}></i>
+              </button>
+
+              {showManualTokenInput && (
+                <div>
+                  <div className="settings-help-text" style={{ marginTop: '16px' }}>
+                    <p>{t.createPATInstructions}</p>
+                    <ol className="settings-steps">
+                      <li>
+                        <a
+                          href="https://github.com/settings/tokens/new"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="settings-link"
+                        >
+                          {t.createPATLink}
+                        </a>
+                      </li>
+                      <li>{t.requiredPermissions}</li>
+                      <li>{t.copyTokenInstruction}</li>
+                    </ol>
+                  </div>
+                  <div style={{ marginTop: '20px' }}>
+                    <TokenInput
+                      value={token}
+                      onChange={setToken}
+                      error={status?.type === 'error' && !oauthLoading ? status.message : undefined}
+                      disabled={loading || oauthLoading}
+                    />
+                  </div>
+                  <SaveButton
+                    onClick={handleSave}
+                    loading={loading}
+                    disabled={!token.trim() || oauthLoading}
+                  />
+                </div>
+              )}
             </div>
-            <SaveButton
-              onClick={handleSave}
-              loading={loading}
-              disabled={!token.trim()}
-            />
           </div>
 
           <div className="settings-section">
