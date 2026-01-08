@@ -93,10 +93,11 @@
 }
 
 .settings-section h3 {
-  margin: 0 0 16px 0;
-  font-size: 16px;
+  margin: 0 0 12px 0;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
 }
 
 .settings-label {
@@ -132,30 +133,32 @@
 }
 
 .settings-help-text {
-  margin-bottom: 16px;
-  padding: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
   background: var(--bg-empty);
   border: 1px solid var(--border-primary);
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
 }
 
 .settings-help-text p {
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
 }
 
 .settings-steps {
-  margin: 8px 0 0 0;
-  padding-left: 20px;
+  margin: 10px 0 0 0;
+  padding-left: 22px;
   font-size: 12px;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .settings-steps li {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .settings-link {
@@ -206,6 +209,282 @@
 
 .settings-theme-option i {
   font-size: 14px;
+}
+
+/* Token Input Styles */
+.token-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.token-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.token-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 2px solid var(--border-primary);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.token-input-wrapper:focus-within {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 4px rgba(186, 225, 255, 0.2);
+  background: var(--bg-card-hover);
+}
+
+.token-input-wrapper.error {
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 0 4px rgba(255, 179, 186, 0.2);
+}
+
+.token-input {
+  flex: 1;
+  width: 100%;
+  padding: 14px 48px 14px 16px;
+  font-size: 14px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.token-input::placeholder {
+  color: var(--text-tertiary);
+  opacity: 0.6;
+  letter-spacing: normal;
+}
+
+.token-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 16px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.toggle-password:hover:not(:disabled) {
+  opacity: 1;
+  color: var(--accent-blue);
+  background: rgba(186, 225, 255, 0.2);
+}
+
+.toggle-password:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.token-input-container .error-message {
+  color: var(--accent-pink);
+  font-size: 12px;
+  margin-top: -4px;
+  padding-left: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.token-input-container .error-message::before {
+  content: '⚠';
+  font-size: 14px;
+}
+
+.token-help {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--bg-empty);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.token-help a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.token-help a:hover {
+  color: var(--accent-blue);
+  text-decoration: underline;
+}
+
+.token-help a::before {
+  content: '🔗';
+  font-size: 12px;
+}
+
+.help-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding-left: 4px;
+}
+
+.save-button {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-green) 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+  margin-top: 16px;
+  letter-spacing: -0.01em;
+}
+
+.save-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, #9dd1ff 0%, #9affb3 100%);
+}
+
+.save-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.save-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-green) 100%);
+}
+
+.save-button .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status Message Styles */
+.status-message {
+  padding: 14px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 16px;
+  box-shadow: var(--shadow-sm);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.status-message.success {
+  background: var(--accent-green);
+  color: var(--badge-open-text);
+  border: 1px solid rgba(90, 138, 106, 0.3);
+}
+
+.status-message.error {
+  background: var(--accent-pink);
+  color: var(--badge-merged-text);
+  border: 1px solid rgba(139, 90, 106, 0.3);
+}
+
+.status-message.info {
+  background: var(--accent-blue);
+  color: var(--badge-public-text);
+  border: 1px solid rgba(90, 122, 138, 0.3);
+}
+
+.status-icon {
+  font-weight: bold;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.status-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.dismiss-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.6;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.dismiss-button:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {

@@ -19,9 +19,6 @@ export const TokenInput: React.FC<TokenInputProps> = ({
 
   return (
     <div className="token-input-container">
-      <label htmlFor="token-input" className="token-label">
-        {t.tokenLabel}
-      </label>
       <div className="token-input-wrapper">
         <input
           id="token-input"
