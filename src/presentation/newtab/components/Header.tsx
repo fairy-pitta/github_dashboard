@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RefreshButton } from '../../components/RefreshButton';
 import { FilterToggle } from '../../components/FilterToggle';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../../i18n/useLanguage';
 import { SettingsMenu } from './SettingsMenu';
+import { Container } from '@/application/di/Container';
+import { StorageKeys } from '@/infrastructure/storage/StorageKeys';
 import './header.css';
 
 interface HeaderProps {
@@ -23,6 +25,33 @@ export const Header: React.FC<HeaderProps> = ({
   const { t, language, setLanguage } = useLanguage();
   const isInIframe = window.self !== window.top;
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showOnGitHub, setShowOnGitHub] = useState(false);
+
+  useEffect(() => {
+    const checkShowOnGitHub = async () => {
+      try {
+        const container = Container.getInstance();
+        const storage = container.getStorage();
+        const value = await storage.get<boolean>(StorageKeys.SHOW_ON_GITHUB);
+        setShowOnGitHub(value !== false); // Default to true
+      } catch {
+        // If container is not initialized, assume showOnGitHub is enabled
+        setShowOnGitHub(true);
+      }
+    };
+    checkShowOnGitHub();
+
+    // Listen for storage changes
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+      if (changes[StorageKeys.SHOW_ON_GITHUB]) {
+        setShowOnGitHub(changes[StorageKeys.SHOW_ON_GITHUB].newValue !== false);
+      }
+    };
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
+  }, []);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'ja' : 'en');
@@ -31,6 +60,9 @@ export const Header: React.FC<HeaderProps> = ({
   const revertToGitHub = () => {
     if (isInIframe && window.top) {
       window.top.location.reload();
+    } else {
+      // If not in iframe, try to navigate to GitHub
+      window.location.href = 'https://github.com';
     }
   };
 
@@ -42,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="header-right">
         <FilterToggle value={filter} onChange={onFilterChange} disabled={refreshing} />
         <RefreshButton onClick={onRefresh} loading={refreshing} />
-        {isInIframe && (
+        {showOnGitHub && (
           <button
             onClick={revertToGitHub}
             className="revert-button"
