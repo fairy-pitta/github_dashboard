@@ -114,30 +114,25 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
                 {calendar.totalContributions} {t.contributionsLastYear}
               </p>
             )}
-          </div>
-        </div>
-        
-        {/* Stats Badges */}
-        <div className="profile-stats">
-          <div className="profile-stat-badge">
-            <i className="fas fa-users"></i>
-            <span className="stat-value">{formatNumber(user.followers)}</span>
-            <span className="stat-label">{t.followers}</span>
-          </div>
-          <div className="profile-stat-badge">
-            <i className="fas fa-user-plus"></i>
-            <span className="stat-value">{formatNumber(user.following)}</span>
-            <span className="stat-label">{t.following}</span>
-          </div>
-          <div className="profile-stat-badge">
-            <i className="fas fa-code-branch"></i>
-            <span className="stat-value">{formatNumber(user.repositories)}</span>
-            <span className="stat-label">{t.repositories}</span>
-          </div>
-          <div className="profile-stat-badge">
-            <i className="fas fa-star"></i>
-            <span className="stat-value">{formatNumber(user.starredRepositories)}</span>
-            <span className="stat-label">{t.stars}</span>
+            {/* Compact Stats */}
+            <div className="profile-stats-inline">
+              <span className="profile-stat-item">
+                <i className="fas fa-users"></i>
+                {formatNumber(user.followers)}
+              </span>
+              <span className="profile-stat-item">
+                <i className="fas fa-user-plus"></i>
+                {formatNumber(user.following)}
+              </span>
+              <span className="profile-stat-item">
+                <i className="fas fa-code-branch"></i>
+                {formatNumber(user.repositories)}
+              </span>
+              <span className="profile-stat-item">
+                <i className="fas fa-star"></i>
+                {formatNumber(user.starredRepositories)}
+              </span>
+            </div>
           </div>
         </div>
 
