@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../../i18n/useLanguage';
 import './styles/loadmore.css';
 
 interface LoadMoreButtonProps {
@@ -14,6 +15,8 @@ export const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
   disabled = false,
   hasMore = true,
 }) => {
+  const { t } = useLanguage();
+  
   if (!hasMore) {
     return null;
   }
@@ -28,10 +31,13 @@ export const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
         {loading ? (
           <>
             <span className="spinner-small"></span>
-            Loading...
+            <span>{t.loading}</span>
           </>
         ) : (
-          'Load More'
+          <>
+            <i className="fas fa-chevron-down"></i>
+            <span>{t.loadMore}</span>
+          </>
         )}
       </button>
     </div>

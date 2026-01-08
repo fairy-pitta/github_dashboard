@@ -1,16 +1,19 @@
 .card {
-  background: white;
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
-  padding: 16px;
-  margin-bottom: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .card:hover {
-  border-color: #0366d6;
-  box-shadow: 0 2px 8px rgba(3, 102, 214, 0.1);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  background: var(--bg-card-hover);
 }
 
 .card-header {
@@ -21,18 +24,18 @@
 }
 
 .card-title {
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
   font-size: 16px;
-  font-weight: 600;
-  color: #24292e;
-  line-height: 1.4;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.5;
 }
 
 .card-description {
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
   font-size: 14px;
-  color: #586069;
-  line-height: 1.4;
+  color: var(--text-tertiary);
+  line-height: 1.6;
 }
 
 .card-meta {
@@ -40,35 +43,35 @@
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #586069;
+  color: var(--text-secondary);
   flex-wrap: wrap;
 }
 
 .card-separator {
-  color: #d1d5db;
+  color: var(--border-primary);
 }
 
 .card-repo {
   font-size: 12px;
-  color: #586069;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .card-number {
-  font-weight: 600;
-  color: #586069;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .card-updated {
-  color: #586069;
+  color: var(--text-secondary);
 }
 
 .card-comments {
-  color: #586069;
+  color: var(--text-secondary);
 }
 
 .card-assignees {
-  color: #586069;
+  color: var(--text-secondary);
 }
 
 .card-labels {
@@ -80,57 +83,59 @@
 
 .label {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 4px 10px;
   font-size: 11px;
   font-weight: 500;
-  color: white;
-  border-radius: 3px;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
   line-height: 1.5;
 }
 
 .badge {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 4px 10px;
   font-size: 11px;
-  font-weight: 600;
-  border-radius: 3px;
+  font-weight: 500;
+  border-radius: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .badge-open {
-  background-color: #28a745;
-  color: white;
+  background-color: var(--badge-open-bg);
+  color: var(--badge-open-text);
 }
 
 .badge-closed {
-  background-color: #6a737d;
-  color: white;
+  background-color: var(--badge-closed-bg);
+  color: var(--badge-closed-text);
 }
 
 .badge-merged {
-  background-color: #6f42c1;
-  color: white;
+  background-color: var(--badge-merged-bg);
+  color: var(--badge-merged-text);
 }
 
 .badge-approved {
-  background-color: #28a745;
-  color: white;
+  background-color: var(--badge-approved-bg);
+  color: var(--badge-approved-text);
 }
 
 .badge-changes-requested {
-  background-color: #d73a49;
-  color: white;
+  background-color: var(--badge-changes-bg);
+  color: var(--badge-changes-text);
 }
 
 .badge-public {
-  background-color: #0366d6;
-  color: white;
+  background-color: var(--badge-public-bg);
+  color: var(--badge-public-text);
 }
 
 .badge-private {
-  background-color: #6a737d;
-  color: white;
+  background-color: var(--badge-private-bg);
+  color: var(--badge-private-text);
 }
 
 

@@ -4,6 +4,7 @@ import { RepositoryCard } from './RepositoryCard';
 import { LoadMoreButton } from './LoadMoreButton';
 import { SkeletonLoader } from './SkeletonLoader';
 import { Container } from '@/application/di/Container';
+import { useLanguage } from '../../i18n/useLanguage';
 import './styles/section.css';
 
 interface RepositorySectionProps {
@@ -15,6 +16,7 @@ export const RepositorySection: React.FC<RepositorySectionProps> = React.memo(({
   repositories: initialRepositories,
   loading: initialLoading = false,
 }) => {
+  const { t } = useLanguage();
   const [repositories, setRepositories] = useState<Repository[]>(initialRepositories);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -45,7 +47,10 @@ export const RepositorySection: React.FC<RepositorySectionProps> = React.memo(({
   if (initialLoading && repositories.length === 0) {
     return (
       <section className="dashboard-section">
-        <h2 className="section-title">Recently Updated Repositories</h2>
+        <h2 className="section-title">
+          <i className="fas fa-code-branch"></i>
+          {t.recentlyUpdatedRepositories}
+        </h2>
         <div className="section-content">
           <SkeletonLoader count={3} />
         </div>
@@ -56,9 +61,12 @@ export const RepositorySection: React.FC<RepositorySectionProps> = React.memo(({
   if (repositories.length === 0) {
     return (
       <section className="dashboard-section">
-        <h2 className="section-title">Recently Updated Repositories</h2>
+        <h2 className="section-title">
+          <i className="fas fa-code-branch"></i>
+          {t.recentlyUpdatedRepositories}
+        </h2>
         <div className="section-content">
-          <p className="empty-message">No repositories found</p>
+          <p className="empty-message">{t.noRepositories}</p>
         </div>
       </section>
     );

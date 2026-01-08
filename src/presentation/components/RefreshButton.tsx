@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../../i18n/useLanguage';
 import './styles/refresh.css';
 
 interface RefreshButtonProps {
@@ -12,22 +13,24 @@ export const RefreshButton: React.FC<RefreshButtonProps> = ({
   loading = false,
   disabled = false,
 }) => {
+  const { t } = useLanguage();
+  
   return (
     <button
       onClick={onClick}
       disabled={disabled || loading}
       className="refresh-button"
-      aria-label="Refresh"
+      aria-label={t.refresh}
     >
       {loading ? (
         <>
           <span className="spinner-small"></span>
-          Refreshing...
+          <span>{t.refreshing}</span>
         </>
       ) : (
         <>
-          <span className="refresh-icon">🔄</span>
-          Refresh
+          <i className="fas fa-sync-alt refresh-icon"></i>
+          <span>{t.refresh}</span>
         </>
       )}
     </button>

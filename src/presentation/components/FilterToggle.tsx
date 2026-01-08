@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../../i18n/useLanguage';
 import './styles/filter.css';
 
 interface FilterToggleProps {
@@ -12,6 +13,8 @@ export const FilterToggle: React.FC<FilterToggleProps> = ({
   onChange,
   disabled = false,
 }) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="filter-toggle">
       <button
@@ -19,14 +22,14 @@ export const FilterToggle: React.FC<FilterToggleProps> = ({
         disabled={disabled}
         className={`filter-option ${value === 'all' ? 'active' : ''}`}
       >
-        All
+        {t.all}
       </button>
       <button
         onClick={() => onChange('open')}
         disabled={disabled}
         className={`filter-option ${value === 'open' ? 'active' : ''}`}
       >
-        Open Only
+        {t.openOnly}
       </button>
     </div>
   );
