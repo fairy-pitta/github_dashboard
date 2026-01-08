@@ -163,7 +163,12 @@ export const NewTabApp: React.FC = () => {
             </>
           }
         >
-          <ProfileSection user={auth.user} loading={auth.loading} />
+          <ProfileSection
+            user={auth.user}
+            loading={auth.loading}
+            dashboardData={dashboard.data}
+            dashboardLoading={dashboard.loading}
+          />
           <RepositorySection
             repositories={dashboard.data?.recentlyUpdatedRepos ?? []}
             loading={dashboard.loading}

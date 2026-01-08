@@ -1,0 +1,65 @@
+.motivation-message-section {
+  margin: 0;
+  padding: 0;
+}
+
+.motivation-message-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.motivation-message-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary, #ffffff);
+  margin: 0;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bg-filter, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+  transition: all 0.2s ease;
+}
+
+.motivation-message-text:hover {
+  background: var(--bg-filter-active, rgba(255, 255, 255, 0.08));
+  border-color: var(--border-button-hover, rgba(255, 255, 255, 0.2));
+}
+
+.motivation-message-skeleton {
+  width: 80%;
+  height: 20px;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-bg, rgba(255, 255, 255, 0.1)) 25%,
+    var(--skeleton-shine, rgba(255, 255, 255, 0.2)) 50%,
+    var(--skeleton-bg, rgba(255, 255, 255, 0.1)) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .motivation-message-section {
+    padding: 16px;
+  }
+
+  .motivation-message-text {
+    font-size: 1rem;
+    padding: 10px 16px;
+  }
+}
+

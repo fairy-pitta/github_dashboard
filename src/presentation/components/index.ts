@@ -15,4 +15,5 @@ export * from './StreakDisplay';
 export * from './AchievementBadges';
 export * from './StatsWidget';
 export * from './StatsButton';
+export * from './MotivationMessage';
 

@@ -19,6 +19,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
   const { theme: currentTheme, setThemeValue } = useTheme();
   const [token, setToken] = useState('');
   const [showOnGitHub, setShowOnGitHub] = useState(true);
+  const [showMotivationMessage, setShowMotivationMessage] = useState(true);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{
     type: 'success' | 'error' | 'info';
@@ -33,6 +34,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
       const storage = container.getStorage();
       const savedToken = await storage.get<string>(StorageKeys.PAT_TOKEN);
       const savedShowOnGitHub = await storage.get<boolean>(StorageKeys.SHOW_ON_GITHUB);
+      const savedShowMotivationMessage = await storage.get<boolean>(StorageKeys.SHOW_MOTIVATION_MESSAGE);
       
       if (savedToken) {
         setToken(savedToken);
@@ -40,6 +42,13 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
       
       if (savedShowOnGitHub !== undefined) {
         setShowOnGitHub(savedShowOnGitHub);
+      }
+      
+      if (savedShowMotivationMessage !== undefined) {
+        setShowMotivationMessage(savedShowMotivationMessage);
+      } else {
+        // Default to true if not set
+        setShowMotivationMessage(true);
       }
     } catch {
       // Ignore errors
@@ -109,6 +118,19 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
     } catch (error) {
       console.error('Failed to save setting:', error);
       setShowOnGitHub(!newValue);
+    }
+  };
+
+  const handleToggleShowMotivationMessage = async () => {
+    const newValue = !showMotivationMessage;
+    setShowMotivationMessage(newValue);
+    try {
+      const container = Container.getInstance();
+      const storage = container.getStorage();
+      await storage.set(StorageKeys.SHOW_MOTIVATION_MESSAGE, newValue);
+    } catch (error) {
+      console.error('Failed to save setting:', error);
+      setShowMotivationMessage(!newValue);
     }
   };
 
@@ -214,6 +236,21 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
             </label>
             <p className="settings-description">
               {t.showOnGitHubDescription}
+            </p>
+          </div>
+
+          <div className="settings-section">
+            <label className="settings-checkbox-label">
+              <input
+                type="checkbox"
+                checked={showMotivationMessage}
+                onChange={handleToggleShowMotivationMessage}
+                className="settings-checkbox"
+              />
+              <span>{t.showMotivationMessage}</span>
+            </label>
+            <p className="settings-description">
+              {t.showMotivationMessageDescription}
             </p>
           </div>
 

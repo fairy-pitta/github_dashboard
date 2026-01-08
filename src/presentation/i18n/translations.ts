@@ -125,6 +125,44 @@ export interface Translations {
   // Repository actions
   createPR: string;
   createIssue: string;
+  
+  // Motivation message settings
+  showMotivationMessage: string;
+  showMotivationMessageDescription: string;
+  
+  // Motivation messages
+  motivationMessages: {
+    pr: {
+      morning: string[];
+      afternoon: string[];
+      evening: string[];
+      default: string[];
+    };
+    review: {
+      morning: string[];
+      afternoon: string[];
+      evening: string[];
+      default: string[];
+    };
+    issue: {
+      morning: string[];
+      afternoon: string[];
+      evening: string[];
+      default: string[];
+    };
+    streak: {
+      morning: string[];
+      afternoon: string[];
+      evening: string[];
+      default: string[];
+    };
+    time: {
+      morning: string[];
+      afternoon: string[];
+      evening: string[];
+    };
+    default: string[];
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -226,6 +264,124 @@ export const translations: Record<Language, Translations> = {
     close: 'Close',
     createPR: 'Create PR',
     createIssue: 'Create Issue',
+    showMotivationMessage: 'Show motivation messages',
+    showMotivationMessageDescription: 'Display random motivation messages based on time of day and activity in the profile section.',
+    motivationMessages: {
+      pr: {
+        morning: [
+          'Good morning! Great PRs you\'ve created!',
+          'Morning! Keep up the excellent PR work!',
+          'Starting the day with amazing PRs!',
+        ],
+        afternoon: [
+          'Afternoon! Your PRs are looking fantastic!',
+          'Great PR work this afternoon!',
+          'Excellent PRs! Keep it up!',
+        ],
+        evening: [
+          'Evening! Wonderful PRs today!',
+          'Ending the day with great PRs!',
+          'Fantastic PR work today!',
+        ],
+        default: [
+          'Amazing PRs! Keep up the great work!',
+          'Your PRs are fantastic!',
+          'Great job on those PRs!',
+        ],
+      },
+      review: {
+        morning: [
+          'Good morning! Time to review some PRs!',
+          'Morning! You have PRs waiting for review!',
+          'Starting the day with PR reviews!',
+        ],
+        afternoon: [
+          'Afternoon! Don\'t forget those PR reviews!',
+          'Great reviews make great code!',
+          'Keep those reviews coming!',
+        ],
+        evening: [
+          'Evening! Perfect time for thoughtful reviews!',
+          'Your reviews help the team!',
+          'Great review work today!',
+        ],
+        default: [
+          'PRs are waiting for your review!',
+          'Your reviews are valuable!',
+          'Keep up the great review work!',
+        ],
+      },
+      issue: {
+        morning: [
+          'Good morning! Tackle those issues today!',
+          'Morning! Issues are opportunities!',
+          'Starting the day by solving issues!',
+        ],
+        afternoon: [
+          'Afternoon! Great work on those issues!',
+          'Keep solving those issues!',
+          'Your issue work is appreciated!',
+        ],
+        evening: [
+          'Evening! Issues resolved, great job!',
+          'Ending the day with solved issues!',
+          'Fantastic issue work today!',
+        ],
+        default: [
+          'Great work on those issues!',
+          'Keep solving issues!',
+          'Your issue contributions matter!',
+        ],
+      },
+      streak: {
+        morning: [
+          'Good morning! Amazing streak you have!',
+          'Morning! Keep that streak going!',
+          'Starting another day of contributions!',
+        ],
+        afternoon: [
+          'Afternoon! Your streak is impressive!',
+          'Keep that contribution streak alive!',
+          'Great streak you\'re maintaining!',
+        ],
+        evening: [
+          'Evening! Another day, another contribution!',
+          'Ending the day maintaining your streak!',
+          'Fantastic streak you\'ve built!',
+        ],
+        default: [
+          'Amazing contribution streak!',
+          'Keep that streak going!',
+          'Your consistency is inspiring!',
+        ],
+      },
+      time: {
+        morning: [
+          'Good morning! Let\'s have a productive day!',
+          'Morning! Time to code!',
+          'Starting fresh today!',
+          'Good morning! Ready to contribute?',
+        ],
+        afternoon: [
+          'Good afternoon! Keep up the great work!',
+          'Afternoon! Stay productive!',
+          'Keep coding this afternoon!',
+          'Afternoon vibes! Let\'s code!',
+        ],
+        evening: [
+          'Good evening! Great work today!',
+          'Evening! Time to wind down with some code!',
+          'Ending the day strong!',
+          'Evening! Keep contributing!',
+        ],
+      },
+      default: [
+        'Let\'s code today!',
+        'Today is a great day to contribute!',
+        'Keep up the excellent work!',
+        'You\'re doing great!',
+      ],
+    },
   },
   ja: {
     dashboardTitle: 'GitHub ダッシュボード',
@@ -325,6 +481,124 @@ export const translations: Record<Language, Translations> = {
     close: '閉じる',
     createPR: 'PRを作成',
     createIssue: 'Issueを作成',
+    showMotivationMessage: 'モチベーションメッセージを表示',
+    showMotivationMessageDescription: 'プロフィールセクションに時間帯やアクティビティに基づいたランダムなモチベーションメッセージを表示します。',
+    motivationMessages: {
+      pr: {
+        morning: [
+          'おはようございます！素晴らしいPRですね！',
+          '朝からPR作成、素敵です！',
+          '今日も良いPRで始まりました！',
+        ],
+        afternoon: [
+          '午後のPR作成、素晴らしいですね！',
+          '午後もPR頑張っていますね！',
+          '素晴らしいPRですね！',
+        ],
+        evening: [
+          '夜ですね！今日も良いPRでした！',
+          '今日一日のPR作成お疲れ様です！',
+          '素晴らしいPR作業でした！',
+        ],
+        default: [
+          '素晴らしいPRですね！頑張りましょう！',
+          'PR作成、素敵です！',
+          'PR作業、頑張っていますね！',
+        ],
+      },
+      review: {
+        morning: [
+          'おはようございます！PRレビューの時間です！',
+          '朝からPRレビュー、素晴らしいですね！',
+          '今日もレビューで始まりましょう！',
+        ],
+        afternoon: [
+          '午後！PRレビューを忘れずに！',
+          '良いレビューが良いコードを作ります！',
+          'レビューを続けましょう！',
+        ],
+        evening: [
+          '夜ですね！じっくりレビューする時間です！',
+          'あなたのレビューがチームを助けます！',
+          '今日も良いレビューでした！',
+        ],
+        default: [
+          'レビュー待ちのPRがありますね！',
+          'あなたのレビューは価値があります！',
+          'レビュー作業、頑張りましょう！',
+        ],
+      },
+      issue: {
+        morning: [
+          'おはようございます！今日もIssue解決しましょう！',
+          '朝からIssue対応、素晴らしいですね！',
+          '今日もIssue解決で始まりましょう！',
+        ],
+        afternoon: [
+          '午後！Issue対応、素晴らしいですね！',
+          'Issue解決を続けましょう！',
+          'あなたのIssue対応に感謝です！',
+        ],
+        evening: [
+          '夜ですね！Issue解決お疲れ様です！',
+          '今日も良いIssue対応でした！',
+          '素晴らしいIssue作業でした！',
+        ],
+        default: [
+          'Issue対応、素晴らしいですね！',
+          'Issue解決を続けましょう！',
+          'あなたのIssue貢献は重要です！',
+        ],
+      },
+      streak: {
+        morning: [
+          'おはようございます！素晴らしい連続記録ですね！',
+          '朝！ストリークを維持しましょう！',
+          '今日もコントリビューションで始まりましょう！',
+        ],
+        afternoon: [
+          '午後！連続記録、素晴らしいですね！',
+          'コントリビューションストリークを維持しましょう！',
+          '素晴らしいストリークですね！',
+        ],
+        evening: [
+          '夜ですね！今日もコントリビューション完了！',
+          '今日もストリークを維持できました！',
+          '素晴らしいストリークを築いていますね！',
+        ],
+        default: [
+          '素晴らしい連続コントリビューション！',
+          'ストリークを維持しましょう！',
+          'あなたの継続性は素晴らしいです！',
+        ],
+      },
+      time: {
+        morning: [
+          'おはようございます！今日も頑張りましょう！',
+          '朝ですね！コーディングの時間です！',
+          '今日も新鮮な気持ちで始めましょう！',
+          'おはようございます！コントリビュートの準備はできていますか？',
+        ],
+        afternoon: [
+          'こんにちは！今日も頑張りましょう！',
+          '午後ですね！生産性を保ちましょう！',
+          '午後もコーディングを続けましょう！',
+          '午後の雰囲気でコーディングしましょう！',
+        ],
+        evening: [
+          'こんばんは！今日も良い一日でした！',
+          '夜ですね！コーディングでリラックスしましょう！',
+          '今日一日、お疲れ様でした！',
+          '夜もコントリビュートを続けましょう！',
+        ],
+      },
+      default: [
+        '今日もコーディングしましょう！',
+        '今日はコントリビュートする良い日です！',
+        '素晴らしい作業を続けましょう！',
+        '頑張っていますね！',
+      ],
+    },
   },
 };
 

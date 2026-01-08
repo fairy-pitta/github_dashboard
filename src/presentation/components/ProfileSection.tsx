@@ -3,19 +3,24 @@ import { User } from '@/domain/entities/User';
 import { ContributionCalendar } from '@/domain/entities/ContributionCalendar';
 import { ContributionStreak } from '@/domain/entities/ContributionStreak';
 import { AchievementBadge } from '@/domain/entities/AchievementBadge';
+import { DashboardData } from '@/domain/usecases/GetDashboardData';
 import { Container } from '@/application/di/Container';
+import { StorageKeys } from '@/infrastructure/storage/StorageKeys';
 import { useLanguage } from '../i18n/useLanguage';
 import { SkeletonLoader } from './SkeletonLoader';
 import { StreakDisplay } from './StreakDisplay';
 import { AchievementBadges } from './AchievementBadges';
+import { MotivationMessage } from './MotivationMessage';
 import './styles/profile-section.css';
 
 interface ProfileSectionProps {
   user: User | null;
   loading?: boolean;
+  dashboardData?: DashboardData | null;
+  dashboardLoading?: boolean;
 }
 
-export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user, loading = false }) => {
+export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user, loading = false, dashboardData = null, dashboardLoading = false }) => {
   const { t } = useLanguage();
   const [calendar, setCalendar] = useState<ContributionCalendar | null>(null);
   const [calendarLoading, setCalendarLoading] = useState(true);
@@ -24,6 +29,7 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
   const [streakLoading, setStreakLoading] = useState(false);
   const [badges, setBadges] = useState<AchievementBadge[]>([]);
   const [badgesLoading, setBadgesLoading] = useState(false);
+  const [showMotivationMessage, setShowMotivationMessage] = useState(true);
 
   useEffect(() => {
     if (!user) {
@@ -105,6 +111,32 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
     fetchStreakAndBadges();
   }, [calendar, user]);
 
+  // Load motivation message setting
+  useEffect(() => {
+    const loadSetting = async () => {
+      try {
+        const container = Container.getInstance();
+        const storage = container.getStorage();
+        const saved = await storage.get<boolean>(StorageKeys.SHOW_MOTIVATION_MESSAGE);
+        setShowMotivationMessage(saved !== false); // Default to true
+      } catch {
+        setShowMotivationMessage(true);
+      }
+    };
+
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+      if (changes[StorageKeys.SHOW_MOTIVATION_MESSAGE]) {
+        setShowMotivationMessage(changes[StorageKeys.SHOW_MOTIVATION_MESSAGE].newValue !== false);
+      }
+    };
+
+    loadSetting();
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
+  }, []);
+
   if (loading || !user) {
     return (
       <section className="dashboard-section profile-section">
@@ -146,63 +178,74 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
   };
 
   return (
-    <section className="dashboard-section profile-section">
+      <section className="dashboard-section profile-section">
       <div className="profile-content">
-        <div className="profile-header">
-          {user.avatarUrl && (
-            <img src={user.avatarUrl} alt={user.login} className="profile-avatar" />
-          )}
-          <div className="profile-info">
-            <h2 className="profile-name">{user.name || user.login}</h2>
-            <p className="profile-username">@{user.login}</p>
-            {user.bio && (
-              <p className="profile-bio">{user.bio}</p>
+        <div className="profile-header-wrapper">
+          <div className="profile-header">
+            {user.avatarUrl && (
+              <img src={user.avatarUrl} alt={user.login} className="profile-avatar" />
             )}
-            {calendar && (
-              <p className="profile-contributions">
-                {calendar.totalContributions} {t.contributionsLastYear}
-              </p>
-            )}
-            {/* Compact Stats Badges */}
-            <div className="profile-stats-badges">
-              <span className="profile-stat-badge">
-                <i className="fas fa-users"></i>
-                {formatNumber(user.followers)}
-              </span>
-              <span className="profile-stat-badge">
-                <i className="fas fa-user-plus"></i>
-                {formatNumber(user.following)}
-              </span>
-              <span className="profile-stat-badge">
-                <i className="fas fa-code-branch"></i>
-                {formatNumber(user.repositories)}
-              </span>
-              <span className="profile-stat-badge">
-                <i className="fas fa-star"></i>
-                {formatNumber(user.starredRepositories)}
-              </span>
-            </div>
-            {/* Organization Tags */}
-            {user.organizations.length > 0 && (
-              <div className="profile-org-tags">
-                {user.organizations.map((org) => (
-                  <a
-                    key={org.login}
-                    href={`https://github.com/${org.login}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="profile-org-tag"
-                    title={org.name || org.login}
-                  >
-                    {org.avatarUrl && (
-                      <img src={org.avatarUrl} alt={org.login} className="org-tag-avatar" />
-                    )}
-                    <span>{org.name || org.login}</span>
-                  </a>
-                ))}
+            <div className="profile-info">
+              <h2 className="profile-name">{user.name || user.login}</h2>
+              <p className="profile-username">@{user.login}</p>
+              {user.bio && (
+                <p className="profile-bio">{user.bio}</p>
+              )}
+              {calendar && (
+                <p className="profile-contributions">
+                  {calendar.totalContributions} {t.contributionsLastYear}
+                </p>
+              )}
+              {/* Compact Stats Badges */}
+              <div className="profile-stats-badges">
+                <span className="profile-stat-badge">
+                  <i className="fas fa-users"></i>
+                  {formatNumber(user.followers)}
+                </span>
+                <span className="profile-stat-badge">
+                  <i className="fas fa-user-plus"></i>
+                  {formatNumber(user.following)}
+                </span>
+                <span className="profile-stat-badge">
+                  <i className="fas fa-code-branch"></i>
+                  {formatNumber(user.repositories)}
+                </span>
+                <span className="profile-stat-badge">
+                  <i className="fas fa-star"></i>
+                  {formatNumber(user.starredRepositories)}
+                </span>
               </div>
-            )}
+              {/* Organization Tags */}
+              {user.organizations.length > 0 && (
+                <div className="profile-org-tags">
+                  {user.organizations.map((org) => (
+                    <a
+                      key={org.login}
+                      href={`https://github.com/${org.login}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="profile-org-tag"
+                      title={org.name || org.login}
+                    >
+                      {org.avatarUrl && (
+                        <img src={org.avatarUrl} alt={org.login} className="org-tag-avatar" />
+                      )}
+                      <span>{org.name || org.login}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
+          {showMotivationMessage && (
+            <div className="profile-motivation-message">
+              <MotivationMessage
+                dashboardData={dashboardData}
+                streak={streak}
+                loading={dashboardLoading || streakLoading}
+              />
+            </div>
+          )}
         </div>
 
         {/* Additional Info */}
