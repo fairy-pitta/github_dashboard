@@ -5,6 +5,7 @@ import { AuthRepository } from '@/infrastructure/repositories/AuthRepository';
 import { PullRequestRepository } from '@/infrastructure/repositories/PullRequestRepository';
 import { IssueRepository } from '@/infrastructure/repositories/IssueRepository';
 import { RepositoryRepository } from '@/infrastructure/repositories/RepositoryRepository';
+import { ContributionCalendarRepository } from '@/infrastructure/repositories/ContributionCalendarRepository';
 import { AuthService } from '../services/AuthService';
 import { DashboardService } from '../services/DashboardService';
 import { RepositoryService } from '../services/RepositoryService';
@@ -24,6 +25,7 @@ export class Container {
   private prRepository: PullRequestRepository | null = null;
   private issueRepository: IssueRepository | null = null;
   private repoRepository: RepositoryRepository | null = null;
+  private contributionCalendarRepository: ContributionCalendarRepository | null = null;
 
   private authService: AuthService | null = null;
   private dashboardService: DashboardService | null = null;
@@ -50,6 +52,7 @@ export class Container {
     this.prRepository = new PullRequestRepository(this.graphqlClient);
     this.issueRepository = new IssueRepository(this.graphqlClient);
     this.repoRepository = new RepositoryRepository(this.graphqlClient);
+    this.contributionCalendarRepository = new ContributionCalendarRepository(this.graphqlClient);
 
     // Initialize services
     this.authService = new AuthService(this.authRepository, this.storage);
@@ -117,6 +120,16 @@ export class Container {
    */
   getCache(): MemoryCache {
     return this.cache;
+  }
+
+  /**
+   * Get ContributionCalendarRepository
+   */
+  getContributionCalendarRepository(): ContributionCalendarRepository {
+    if (!this.contributionCalendarRepository) {
+      throw new Error('Container not initialized. Call initialize() first.');
+    }
+    return this.contributionCalendarRepository;
   }
 }
 
