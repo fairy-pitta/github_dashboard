@@ -2,7 +2,6 @@ import React, { useState, lazy, Suspense, useCallback, useEffect } from 'react';
 import { DashboardLayout } from './components/DashboardLayout';
 import { Header } from './components/Header';
 import { AuthGuard } from './components/AuthGuard';
-import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { StatsWidget } from '../components/StatsWidget';
 import { SkeletonLoader } from '../components/SkeletonLoader';
@@ -97,13 +96,6 @@ export const NewTabApp: React.FC = () => {
   }, [handleRefresh]);
 
   if (!auth.isAuthenticated) {
-    if (auth.loading) {
-      return (
-        <div className="dashboard-container">
-          <LoadingSpinner size="large" />
-        </div>
-      );
-    }
     return <AuthGuard />;
   }
 
