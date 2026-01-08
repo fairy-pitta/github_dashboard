@@ -133,6 +133,26 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
                 {formatNumber(user.starredRepositories)}
               </span>
             </div>
+            {/* Organization Tags */}
+            {user.organizations.length > 0 && (
+              <div className="profile-org-tags">
+                {user.organizations.map((org) => (
+                  <a
+                    key={org.login}
+                    href={`https://github.com/${org.login}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="profile-org-tag"
+                    title={org.name || org.login}
+                  >
+                    {org.avatarUrl && (
+                      <img src={org.avatarUrl} alt={org.login} className="org-tag-avatar" />
+                    )}
+                    <span>{org.name || org.login}</span>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

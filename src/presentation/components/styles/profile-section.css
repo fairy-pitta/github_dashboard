@@ -3,14 +3,11 @@
 }
 
 .profile-content {
-  background: var(--bg-card);
-  border-radius: 16px;
-  padding: 12px;
-  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  padding: 0;
 }
 
 .profile-header {
@@ -100,6 +97,44 @@
 .profile-stat-badge i {
   font-size: 10px;
   color: var(--accent-blue);
+}
+
+/* Organization Tags */
+.profile-org-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.profile-org-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: var(--bg-filter);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 10px;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+}
+
+.profile-org-tag:hover {
+  background: var(--bg-filter-active);
+  border-color: var(--border-button-hover);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.org-tag-avatar {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 /* Additional Info */
