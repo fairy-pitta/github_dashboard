@@ -89,6 +89,13 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
   // Get last 365 days (or less if we don't have that much data)
   const displayDays = allDays.slice(-365);
 
+  const formatNumber = (num: number): string => {
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'k';
+    }
+    return num.toString();
+  };
+
   return (
     <section className="dashboard-section profile-section">
       <div className="profile-content">
@@ -99,6 +106,9 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
           <div className="profile-info">
             <h2 className="profile-name">{user.name || user.login}</h2>
             <p className="profile-username">@{user.login}</p>
+            {user.bio && (
+              <p className="profile-bio">{user.bio}</p>
+            )}
             {calendar && (
               <p className="profile-contributions">
                 {calendar.totalContributions} {t.contributionsLastYear}
@@ -106,6 +116,78 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
             )}
           </div>
         </div>
+        
+        {/* Stats Badges */}
+        <div className="profile-stats">
+          <div className="profile-stat-badge">
+            <i className="fas fa-users"></i>
+            <span className="stat-value">{formatNumber(user.followers)}</span>
+            <span className="stat-label">{t.followers}</span>
+          </div>
+          <div className="profile-stat-badge">
+            <i className="fas fa-user-plus"></i>
+            <span className="stat-value">{formatNumber(user.following)}</span>
+            <span className="stat-label">{t.following}</span>
+          </div>
+          <div className="profile-stat-badge">
+            <i className="fas fa-code-branch"></i>
+            <span className="stat-value">{formatNumber(user.repositories)}</span>
+            <span className="stat-label">{t.repositories}</span>
+          </div>
+          <div className="profile-stat-badge">
+            <i className="fas fa-star"></i>
+            <span className="stat-value">{formatNumber(user.starredRepositories)}</span>
+            <span className="stat-label">{t.stars}</span>
+          </div>
+        </div>
+
+        {/* Additional Info */}
+        {(user.location || user.company || user.websiteUrl || user.organizations.length > 0) && (
+          <div className="profile-additional-info">
+            {user.location && (
+              <div className="profile-info-item">
+                <i className="fas fa-map-marker-alt"></i>
+                <span>{user.location}</span>
+              </div>
+            )}
+            {user.company && (
+              <div className="profile-info-item">
+                <i className="fas fa-building"></i>
+                <span>{user.company}</span>
+              </div>
+            )}
+            {user.websiteUrl && (
+              <div className="profile-info-item">
+                <i className="fas fa-link"></i>
+                <a href={user.websiteUrl} target="_blank" rel="noopener noreferrer">
+                  {user.websiteUrl.replace(/^https?:\/\//, '')}
+                </a>
+              </div>
+            )}
+            {user.organizations.length > 0 && (
+              <div className="profile-organizations">
+                <span className="organizations-label">{t.organizations}:</span>
+                <div className="organizations-list">
+                  {user.organizations.map((org) => (
+                    <a
+                      key={org.login}
+                      href={`https://github.com/${org.login}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="organization-badge"
+                      title={org.name || org.login}
+                    >
+                      {org.avatarUrl && (
+                        <img src={org.avatarUrl} alt={org.login} className="org-avatar" />
+                      )}
+                      <span>{org.name || org.login}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         {calendarLoading ? (
           <div className="contribution-calendar-loading">
             <SkeletonLoader count={1} />

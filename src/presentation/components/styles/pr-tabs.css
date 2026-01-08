@@ -6,49 +6,58 @@
 
 .pr-tab-header {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-primary);
+  flex-shrink: 0;
 }
 
 .pr-tab {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: none;
+  flex: 1;
+  padding: 10px 12px;
+  background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
-  color: var(--text-color-secondary);
-  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: -1px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
-.pr-tab:hover:not(:disabled) {
-  color: var(--text-color-primary);
-  background: var(--hover-bg);
+.pr-tab:hover:not(.active):not(:disabled) {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  border-radius: 8px 8px 0 0;
 }
 
 .pr-tab.active {
-  color: var(--text-color-primary);
-  border-bottom-color: var(--accent-color);
-  font-weight: 500;
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-blue);
+  font-weight: 600;
+  background: var(--bg-filter-active);
 }
 
 .pr-tab:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .pr-tab i {
-  font-size: 0.875rem;
+  font-size: 16px;
 }
 
 .pr-tab-count {
-  font-size: 0.75rem;
-  opacity: 0.7;
-  margin-left: 0.25rem;
+  font-size: 12px;
+  background: var(--bg-filter);
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 4px;
+  color: var(--text-primary);
+  font-weight: 600;
 }
 

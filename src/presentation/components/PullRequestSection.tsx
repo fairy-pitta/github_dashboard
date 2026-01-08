@@ -35,7 +35,33 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
   useEffect(() => {
     setCreatedPRs(initialCreatedPRs);
     setReviewRequestedPRs(initialReviewRequestedPRs);
+    // Reset cursors when initial data changes
+    setCreatedCursor(undefined);
+    setReviewRequestedCursor(undefined);
+    setHasMoreCreated(true);
+    setHasMoreReviewRequested(true);
   }, [initialCreatedPRs, initialReviewRequestedPRs]);
+
+  // Debug: Log when tab changes or data updates
+  useEffect(() => {
+    console.log('[PullRequestSection] Tab changed:', activeTab);
+    console.log('[PullRequestSection] Created PRs count:', createdPRs.length);
+    console.log('[PullRequestSection] Review Requested PRs count:', reviewRequestedPRs.length);
+    if (createdPRs.length > 0) {
+      console.log('[PullRequestSection] First created PR:', {
+        title: createdPRs[0].title,
+        author: createdPRs[0].author?.login,
+        url: createdPRs[0].url,
+      });
+    }
+    if (reviewRequestedPRs.length > 0) {
+      console.log('[PullRequestSection] First review requested PR:', {
+        title: reviewRequestedPRs[0].title,
+        author: reviewRequestedPRs[0].author?.login,
+        url: reviewRequestedPRs[0].url,
+      });
+    }
+  }, [activeTab, createdPRs, reviewRequestedPRs]);
 
   const handleLoadMore = async () => {
     setLoadingMore(true);

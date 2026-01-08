@@ -10,6 +10,30 @@ const USER_QUERY = `
       login
       name
       avatarUrl
+      bio
+      followers {
+        totalCount
+      }
+      following {
+        totalCount
+      }
+      repositories {
+        totalCount
+      }
+      starredRepositories {
+        totalCount
+      }
+      location
+      websiteUrl
+      company
+      twitterUsername
+      organizations(first: 5) {
+        nodes {
+          login
+          name
+          avatarUrl
+        }
+      }
     }
   }
 `;

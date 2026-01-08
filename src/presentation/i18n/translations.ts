@@ -70,6 +70,15 @@ export interface Translations {
   
   // Profile
   contributionsLastYear: string;
+  followers: string;
+  following: string;
+  repositories: string;
+  stars: string;
+  organizations: string;
+  location: string;
+  website: string;
+  company: string;
+  bio: string;
   
   // Settings
   copyTokenInstruction: string;
@@ -132,6 +141,15 @@ export const translations: Record<Language, Translations> = {
     tokenEmpty: 'Token cannot be empty',
     tokenSaveFailed: 'Failed to save token. Please check your token and try again.',
     contributionsLastYear: 'contributions in the last year',
+    followers: 'Followers',
+    following: 'Following',
+    repositories: 'Repositories',
+    stars: 'Stars',
+    organizations: 'Organizations',
+    location: 'Location',
+    website: 'Website',
+    company: 'Company',
+    bio: 'Bio',
     copyTokenInstruction: 'Copy the token and paste it below',
     languageLabel: 'Language',
     english: 'English',
@@ -190,6 +208,15 @@ export const translations: Record<Language, Translations> = {
     tokenEmpty: 'トークンは空にできません',
     tokenSaveFailed: 'トークンの保存に失敗しました。トークンを確認して再度お試しください。',
     contributionsLastYear: '過去1年間のコントリビューション',
+    followers: 'フォロワー',
+    following: 'フォロー中',
+    repositories: 'リポジトリ',
+    stars: 'スター',
+    organizations: '組織',
+    location: '場所',
+    website: 'ウェブサイト',
+    company: '会社',
+    bio: '自己紹介',
     copyTokenInstruction: 'トークンをコピーして、下に入力してください',
     languageLabel: '言語',
     english: 'English',

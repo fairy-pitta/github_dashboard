@@ -3,48 +3,189 @@
 }
 
 .profile-content {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-  box-shadow: var(--card-shadow);
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
 }
 
 .profile-header {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .profile-avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-primary);
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .profile-info {
   flex: 1;
+  min-width: 0;
 }
 
 .profile-name {
-  font-size: 1.25rem;
+  font-size: 18px;
   font-weight: 600;
-  color: var(--text-color-primary);
-  margin: 0 0 0.25rem 0;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+  word-wrap: break-word;
 }
 
 .profile-username {
-  font-size: 0.875rem;
-  color: var(--text-color-secondary);
-  margin: 0 0 0.5rem 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 8px 0;
+}
+
+.profile-bio {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+  word-wrap: break-word;
 }
 
 .profile-contributions {
-  font-size: 0.875rem;
-  color: var(--text-color-secondary);
+  font-size: 13px;
+  color: var(--text-secondary);
   margin: 0;
+  font-weight: 500;
+}
+
+/* Stats Badges */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.profile-stat-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 8px;
+  background: var(--bg-filter);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.profile-stat-badge:hover {
+  background: var(--bg-filter-active);
+  border-color: var(--border-button-hover);
+  transform: translateY(-1px);
+}
+
+.profile-stat-badge i {
+  font-size: 18px;
+  color: var(--accent-blue);
+  margin-bottom: 4px;
+}
+
+.profile-stat-badge .stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.profile-stat-badge .stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Additional Info */
+.profile-additional-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-primary);
+}
+
+.profile-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.profile-info-item i {
+  font-size: 14px;
+  color: var(--accent-blue);
+  width: 16px;
+  text-align: center;
+}
+
+.profile-info-item a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.profile-info-item a:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+.profile-organizations {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.organizations-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.organizations-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.organization-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: var(--bg-filter);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.organization-badge:hover {
+  background: var(--bg-filter-active);
+  border-color: var(--border-button-hover);
+  transform: translateY(-1px);
+}
+
+.org-avatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .contribution-calendar-loading {
