@@ -1,0 +1,39 @@
+.filter-toggle {
+  display: flex;
+  gap: 0;
+  background-color: #f6f8fa;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.filter-option {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #586069;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-option:not(:last-child) {
+  border-right: 1px solid #d1d5db;
+}
+
+.filter-option:hover:not(:disabled) {
+  background-color: #e1e4e8;
+}
+
+.filter-option.active {
+  background-color: white;
+  color: #0366d6;
+  font-weight: 600;
+}
+
+.filter-option:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

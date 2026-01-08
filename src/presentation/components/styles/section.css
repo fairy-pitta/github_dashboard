@@ -1,0 +1,27 @@
+.dashboard-section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #24292e;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e1e4e8;
+}
+
+.section-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-message {
+  color: #586069;
+  font-size: 14px;
+  padding: 24px;
+  text-align: center;
+  background: #f6f8fa;
+  border-radius: 6px;
+}
+
