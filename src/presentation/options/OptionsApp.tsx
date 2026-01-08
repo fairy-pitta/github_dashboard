@@ -17,10 +17,21 @@ export const OptionsApp: React.FC = () => {
   useEffect(() => {
     // Load saved token
     const loadToken = async () => {
-      const storage = Container.getInstance().getStorage();
-      const savedToken = await storage.get<string>(StorageKeys.PAT_TOKEN);
-      if (savedToken) {
-        setToken(savedToken);
+      try {
+        const container = Container.getInstance();
+        const storage = container.getStorage();
+        const savedToken = await storage.get<string>(StorageKeys.PAT_TOKEN);
+        if (savedToken) {
+          setToken(savedToken);
+          // Initialize container if token exists
+          try {
+            await container.initialize(savedToken);
+          } catch {
+            // Ignore initialization errors
+          }
+        }
+      } catch {
+        // Ignore errors
       }
     };
     loadToken();
