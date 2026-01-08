@@ -4,8 +4,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  /* Opaque background for readability */
-  background: var(--bg-primary);
+  /* Dim the dashboard but keep it visible behind the modal */
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
