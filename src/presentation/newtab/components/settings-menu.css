@@ -162,23 +162,23 @@
 }
 
 .settings-link {
-  color: var(--text-primary);
-  text-decoration: underline;
-  text-decoration-color: var(--accent-blue);
-  text-underline-offset: 3px;
-  text-decoration-thickness: 2px;
-  font-weight: 600;
+  text-decoration: none;
+  font-weight: 700;
   transition: all 0.2s ease;
-  padding: 2px 4px;
-  border-radius: 4px;
-  background: rgba(186, 225, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--accent-blue);
+  color: white;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
 }
 
 .settings-link:hover {
-  color: var(--text-primary);
-  text-decoration-color: var(--accent-green);
-  background: rgba(186, 255, 201, 0.2);
-  text-decoration-thickness: 3px;
+  background: #5BA0F2;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(74, 144, 226, 0.4);
+  text-decoration: none;
 }
 
 .settings-theme-selector {
