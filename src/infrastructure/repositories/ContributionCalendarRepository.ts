@@ -6,9 +6,8 @@ const CONTRIBUTION_CALENDAR_QUERY = `
   query GetContributionCalendar($from: DateTime!, $to: DateTime!) {
     viewer {
       contributionsCollection(from: $from, to: $to) {
-        totalContributions
         contributionCalendar {
-          totalWeeks
+          totalContributions
           weeks {
             contributionDays {
               date
@@ -25,9 +24,8 @@ const CONTRIBUTION_CALENDAR_QUERY = `
 interface ContributionCalendarResponse {
   viewer: {
     contributionsCollection: {
-      totalContributions: number;
       contributionCalendar: {
-        totalWeeks: number;
+        totalContributions: number;
         weeks: Array<{
           contributionDays: Array<{
             date: string;
@@ -58,9 +56,11 @@ export class ContributionCalendarRepository implements IContributionCalendarRepo
       throw new Error('No contribution calendar data returned from API');
     }
 
+    const calendar = collection.contributionCalendar;
+
     return ContributionCalendar.fromPlain({
-      totalContributions: collection.totalContributions || 0,
-      weeks: collection.contributionCalendar.weeks || [],
+      totalContributions: calendar.totalContributions || 0,
+      weeks: calendar.weeks || [],
     });
   }
 }
