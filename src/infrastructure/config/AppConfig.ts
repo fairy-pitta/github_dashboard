@@ -1,38 +1,8 @@
 /**
  * Application configuration
- * Moved from application layer to infrastructure layer to fix dependency inversion violation
+ * Re-exported from Application Layer to maintain backward compatibility
+ * @deprecated Use @/application/config/AppConfig instead
  */
-export const AppConfig = {
-  /**
-   * Cache TTL in milliseconds
-   */
-  cache: {
-    dashboardTTL: 2 * 60 * 1000, // 2 minutes
-    repositoriesTTL: 5 * 60 * 1000, // 5 minutes
-    defaultTTL: 3 * 60 * 1000, // 3 minutes
-  },
-
-  /**
-   * API endpoints
-   */
-  api: {
-    graphqlEndpoint: 'https://api.github.com/graphql',
-    restEndpoint: 'https://api.github.com',
-  },
-
-  /**
-   * Default values
-   */
-  defaults: {
-    dashboardLimit: 10,
-    repositoriesLimit: 20,
-  },
-
-  oauth: {
-    clientId: import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID || '',
-    scopes: ['read:user', 'read:org', 'repo'],
-    redirectUri: '',
-  },
-} as const;
+export { AppConfig } from '@/application/config/AppConfig';
 
 

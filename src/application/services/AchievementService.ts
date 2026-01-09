@@ -4,7 +4,7 @@ import { PullRequest } from '@/domain/entities/PullRequest';
 import { CheckAchievements } from '@/domain/usecases/CheckAchievements';
 import { ICache } from '@/domain/interfaces/ICache';
 import { CacheKeys } from '../config/CacheKeys';
-import { AppConfig } from '@/infrastructure/config/AppConfig';
+import { AppConfig } from '../config/AppConfig';
 
 /**
  * Achievement service with caching

@@ -5,7 +5,7 @@ import { IIssueRepository } from '@/domain/repositories/IIssueRepository';
 import { IRepositoryRepository } from '@/domain/repositories/IRepositoryRepository';
 import { ICache } from '@/domain/interfaces/ICache';
 import { CacheKeys } from '../config/CacheKeys';
-import { AppConfig } from '@/infrastructure/config/AppConfig';
+import { AppConfig } from '../config/AppConfig';
 import { NetworkError } from '@/domain/errors/DomainError';
 
 /**
