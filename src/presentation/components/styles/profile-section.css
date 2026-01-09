@@ -296,6 +296,7 @@
   font-size: 10px;
   color: var(--text-secondary);
   flex-shrink: 0;
+  margin-bottom: 8px;
 }
 
 .legend-levels {
