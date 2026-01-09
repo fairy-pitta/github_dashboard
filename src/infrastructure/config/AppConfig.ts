@@ -1,5 +1,6 @@
 /**
  * Application configuration
+ * Moved from application layer to infrastructure layer to fix dependency inversion violation
  */
 export const AppConfig = {
   /**

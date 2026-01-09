@@ -2,7 +2,7 @@ import { Repository } from '@/domain/entities/Repository';
 import { IRepositoryRepository } from '@/domain/repositories/IRepositoryRepository';
 import { ICache } from '@/infrastructure/cache/ICache';
 import { CacheKeys } from '../config/CacheKeys';
-import { AppConfig } from '../config/AppConfig';
+import { AppConfig } from '@/infrastructure/config/AppConfig';
 
 /**
  * Repository service with caching

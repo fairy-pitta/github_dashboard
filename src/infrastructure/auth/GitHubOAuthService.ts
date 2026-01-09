@@ -1,5 +1,5 @@
 import { AuthenticationError, NetworkError } from '@/domain/errors/DomainError';
-import { AppConfig } from '@/application/config/AppConfig';
+import { AppConfig } from '../config/AppConfig';
 
 interface TokenResponse {
   access_token?: string;

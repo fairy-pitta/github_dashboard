@@ -4,7 +4,7 @@ import {
   AuthenticationError,
   NetworkError,
 } from '@/domain/errors/DomainError';
-import { AppConfig } from '@/application/config/AppConfig';
+import { AppConfig } from '../../config/AppConfig';
 
 // Mock chrome.tabs for opening verification URL
 const mockTabsCreate = vi.fn();
@@ -15,7 +15,7 @@ global.chrome = {
 } as any;
 
 // Mock AppConfig
-vi.mock('@/application/config/AppConfig', () => ({
+vi.mock('../../config/AppConfig', () => ({
   AppConfig: {
     oauth: {
       clientId: 'test-client-id',

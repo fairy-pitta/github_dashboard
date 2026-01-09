@@ -2,7 +2,7 @@ import { StatsData } from '@/domain/entities/StatsData';
 import { IStatsRepository } from '@/domain/repositories/IStatsRepository';
 import { ICache } from '@/infrastructure/cache/ICache';
 import { CacheKeys } from '../config/CacheKeys';
-import { AppConfig } from '../config/AppConfig';
+import { AppConfig } from '@/infrastructure/config/AppConfig';
 
 /**
  * Stats service with caching

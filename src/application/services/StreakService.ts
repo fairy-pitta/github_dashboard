@@ -3,7 +3,7 @@ import { ContributionCalendar } from '@/domain/entities/ContributionCalendar';
 import { CalculateStreak } from '@/domain/usecases/CalculateStreak';
 import { ICache } from '@/infrastructure/cache/ICache';
 import { CacheKeys } from '../config/CacheKeys';
-import { AppConfig } from '../config/AppConfig';
+import { AppConfig } from '@/infrastructure/config/AppConfig';
 
 /**
  * Streak service with caching
