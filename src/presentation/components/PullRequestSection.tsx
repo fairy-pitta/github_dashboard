@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PullRequest } from '@/domain/entities/PullRequest';
 import { PRCard } from './PRCard';
 import { LoadMoreButton } from './LoadMoreButton';
 import { SkeletonLoader } from './SkeletonLoader';
+import { ReviewStatusFilter, ReviewStatusFilterOption } from './ReviewStatusFilter';
 import { useLanguage } from '../i18n/useLanguage';
 import { useServices } from '../context/ServiceContext';
 import './styles/section.css';
@@ -31,6 +32,7 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
   const [reviewRequestedCursor, setReviewRequestedCursor] = useState<string | undefined>();
   const [hasMoreCreated, setHasMoreCreated] = useState(true);
   const [hasMoreReviewRequested, setHasMoreReviewRequested] = useState(true);
+  const [reviewFilters, setReviewFilters] = useState<ReviewStatusFilterOption[]>(['ALL']);
 
   // Update PRs when initial PRs change
   useEffect(() => {
@@ -67,7 +69,39 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
     }
   };
 
-  const currentPRs = activeTab === 'created' ? createdPRs : reviewRequestedPRs;
+  // Filter PRs based on review status
+  const filteredPRs = useMemo(() => {
+    const prs = activeTab === 'created' ? createdPRs : reviewRequestedPRs;
+    
+    if (reviewFilters.includes('ALL') || reviewFilters.length === 0) {
+      return prs;
+    }
+
+    return prs.filter((pr) => {
+      // Check if any review matches the selected filters
+      const reviewStates = pr.reviews.map((review) => review.state);
+      const hasMatchingReview = reviewFilters.some((filter) => {
+        if (filter === 'REVIEW_REQUIRED') {
+          // REVIEW_REQUIRED: either reviewDecision is REVIEW_REQUIRED or no reviews yet
+          return pr.reviewDecision === 'REVIEW_REQUIRED' || 
+                 (pr.reviewDecision === null && pr.reviews.length === 0);
+        }
+        return reviewStates.includes(filter);
+      });
+
+      // Also check reviewDecision for APPROVED and CHANGES_REQUESTED
+      if (reviewFilters.includes('APPROVED') && pr.reviewDecision === 'APPROVED') {
+        return true;
+      }
+      if (reviewFilters.includes('CHANGES_REQUESTED') && pr.reviewDecision === 'CHANGES_REQUESTED') {
+        return true;
+      }
+
+      return hasMatchingReview;
+    });
+  }, [activeTab, createdPRs, reviewRequestedPRs, reviewFilters]);
+
+  const currentPRs = filteredPRs;
   const currentTitle = activeTab === 'created' ? t.pullRequestsCreated : t.pullRequestsReviewRequested;
   const currentEmptyMessage = activeTab === 'created' ? t.noPullRequests : t.noPullRequestsReview;
   const currentIcon = activeTab === 'created' ? 'fa-code-pull-request' : 'fa-user-check';
@@ -125,6 +159,13 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
               <span className="pr-tab-count">({reviewRequestedPRs.length})</span>
             )}
           </button>
+          <div className="pr-tab-header-actions">
+            <ReviewStatusFilter
+              selectedFilters={reviewFilters}
+              onChange={setReviewFilters}
+              disabled={loading}
+            />
+          </div>
         </div>
         <div className="section-content">
           {currentPRs.length === 0 ? (
