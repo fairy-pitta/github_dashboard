@@ -1,6 +1,11 @@
 // Service Worker for Chrome Extension
-import { StorageKeys } from '@/application/config/StorageKeys';
 import { Container } from '@/infrastructure/di/Container';
+
+// Storage keys - defined in Infrastructure Layer to avoid dependency on Application Layer
+const STORAGE_KEYS = {
+  GITHUB_TOKEN: 'github_token',
+  PAT_TOKEN: 'pat_token',
+} as const;
 
 // Initialize on installation
 chrome.runtime.onInstalled.addListener(async (details) => {
@@ -17,9 +22,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     const storage = container.getStorage();
     
     // Check GITHUB_TOKEN first, then fall back to PAT_TOKEN
-    let token = await storage.get<string>(StorageKeys.GITHUB_TOKEN);
+    let token = await storage.get<string>(STORAGE_KEYS.GITHUB_TOKEN);
     if (!token) {
-      token = await storage.get<string>(StorageKeys.PAT_TOKEN);
+      token = await storage.get<string>(STORAGE_KEYS.PAT_TOKEN);
     }
     
     if (token) {
@@ -65,8 +70,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Listen for storage changes (both GITHUB_TOKEN and PAT_TOKEN)
 chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'local') {
-    const githubTokenChange = changes[StorageKeys.GITHUB_TOKEN];
-    const patTokenChange = changes[StorageKeys.PAT_TOKEN];
+    const githubTokenChange = changes[STORAGE_KEYS.GITHUB_TOKEN];
+    const patTokenChange = changes[STORAGE_KEYS.PAT_TOKEN];
 
     // Get the new token (GITHUB_TOKEN takes priority)
     const newToken =
@@ -84,12 +89,12 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
       const container = Container.getInstance();
       const storage = container.getStorage();
       storage
-        .get<string>(StorageKeys.GITHUB_TOKEN)
+        .get<string>(STORAGE_KEYS.GITHUB_TOKEN)
         .then((token) => {
           if (token) {
             return container.initialize(token);
           }
-          return storage.get<string>(StorageKeys.PAT_TOKEN).then((patToken) => {
+          return storage.get<string>(STORAGE_KEYS.PAT_TOKEN).then((patToken) => {
             if (patToken) {
               return container.initialize(patToken);
             }

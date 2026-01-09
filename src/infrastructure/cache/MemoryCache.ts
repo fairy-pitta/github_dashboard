@@ -1,6 +1,8 @@
 import { ICache } from '@/domain/interfaces/ICache';
 import { IStorage } from '@/domain/interfaces/IStorage';
-import { StorageKeys } from '@/application/config/StorageKeys';
+
+// Cache storage key prefix - defined in Infrastructure Layer to avoid dependency on Application Layer
+const CACHE_PREFIX = 'cache_';
 
 interface CacheEntry<T> {
   value: T;
@@ -38,7 +40,7 @@ export class MemoryCache implements ICache {
     this.cache.set(key, { value, expiresAt });
 
     // Persist cache metadata to storage
-    const storageKey = `${StorageKeys.CACHE_PREFIX}${key}`;
+    const storageKey = `${CACHE_PREFIX}${key}`;
     await this.storage.set(storageKey, {
       expiresAt,
       cached: true,
@@ -47,7 +49,7 @@ export class MemoryCache implements ICache {
 
   async remove(key: string): Promise<void> {
     this.cache.delete(key);
-    const storageKey = `${StorageKeys.CACHE_PREFIX}${key}`;
+    const storageKey = `${CACHE_PREFIX}${key}`;
     await this.storage.remove(storageKey);
   }
 
