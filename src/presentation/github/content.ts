@@ -121,7 +121,7 @@ async function injectDashboard(): Promise<void> {
     z-index: 9999;
     background: #fff;
   `;
-  iframe.src = chrome.runtime.getURL('newtab.html');
+  iframe.src = chrome.runtime.getURL('dashboard.html');
   body.innerHTML = '';
   body.appendChild(iframe);
 }

@@ -153,7 +153,7 @@ async function initDashboard() {
     z-index: 9999;
     background: #fff;
   `;
-  iframe.src = chrome.runtime.getURL('newtab.html');
+  iframe.src = chrome.runtime.getURL('dashboard.html');
 
   // Replace body content
   body.innerHTML = '';

@@ -5,9 +5,9 @@ import { Container } from '@/application/di/Container';
 // Initialize on installation
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
-    // Open new tab page on first install to show onboarding
+    // Open GitHub.com on first install to show dashboard
     chrome.tabs.create({
-      url: chrome.runtime.getURL('newtab.html'),
+      url: 'https://github.com',
     });
   }
 
