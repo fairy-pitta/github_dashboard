@@ -1,0 +1,45 @@
+.contribution-tooltip {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  animation: tooltipFadeIn 0.1s ease-out forwards;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contribution-tooltip-content {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  padding: 8px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.contribution-tooltip-count {
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.contribution-tooltip-count strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.contribution-tooltip-date {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+

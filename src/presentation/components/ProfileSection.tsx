@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { User } from '@/domain/entities/User';
 import { ContributionCalendar } from '@/domain/entities/ContributionCalendar';
 import { ContributionStreak } from '@/domain/entities/ContributionStreak';
@@ -11,6 +11,7 @@ import { SkeletonLoader } from './SkeletonLoader';
 import { StreakDisplay } from './StreakDisplay';
 import { AchievementBadges } from './AchievementBadges';
 import { MotivationMessage } from './MotivationMessage';
+import { ContributionTooltip } from './ContributionTooltip';
 import './styles/profile-section.css';
 
 interface ProfileSectionProps {
@@ -30,6 +31,12 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
   const [badges, setBadges] = useState<AchievementBadge[]>([]);
   const [badgesLoading, setBadgesLoading] = useState(false);
   const [showMotivationMessage, setShowMotivationMessage] = useState(true);
+  const [tooltip, setTooltip] = useState<{
+    date: string;
+    count: number;
+    x: number;
+    y: number;
+  } | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -147,35 +154,59 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
     );
   }
 
-  const getContributionLevel = (count: number): string => {
+  const getContributionLevel = useCallback((count: number): string => {
     if (count === 0) return 'level-0';
     if (count <= 3) return 'level-1';
     if (count <= 6) return 'level-2';
     if (count <= 9) return 'level-3';
     return 'level-4';
-  };
+  }, []);
 
   // Get all contribution days from all weeks
-  const allDays: Array<{ date: string; count: number; color: string }> = [];
-  calendar?.weeks.forEach((week) => {
-    week.contributionDays.forEach((day) => {
-      allDays.push({
-        date: day.date,
-        count: day.contributionCount,
-        color: day.color,
+  const displayDays = useMemo(() => {
+    const allDays: Array<{ date: string; count: number; color: string }> = [];
+    calendar?.weeks.forEach((week) => {
+      week.contributionDays.forEach((day) => {
+        allDays.push({
+          date: day.date,
+          count: day.contributionCount,
+          color: day.color,
+        });
       });
     });
-  });
+    // Get last 365 days (or less if we don't have that much data)
+    return allDays.slice(-365);
+  }, [calendar]);
 
-  // Get last 365 days (or less if we don't have that much data)
-  const displayDays = allDays.slice(-365);
-
-  const formatNumber = (num: number): string => {
+  const formatNumber = useCallback((num: number): string => {
     if (num >= 1000) {
       return (num / 1000).toFixed(1) + 'k';
     }
     return num.toString();
-  };
+  }, []);
+
+  const handleDayMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>, day: { date: string; count: number; color: string }) => {
+    setTooltip({
+      date: day.date,
+      count: day.count,
+      x: e.clientX,
+      y: e.clientY,
+    });
+  }, []);
+
+  const handleDayMouseLeave = useCallback(() => {
+    setTooltip(null);
+  }, []);
+
+  const handleDayMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (tooltip) {
+      setTooltip({
+        ...tooltip,
+        x: e.clientX,
+        y: e.clientY,
+      });
+    }
+  }, [tooltip]);
 
   return (
       <section className="dashboard-section profile-section">
@@ -291,7 +322,9 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
                   key={`${day.date}-${index}`}
                   className={`contribution-day ${getContributionLevel(day.count)}`}
                   style={{ backgroundColor: day.color }}
-                  title={`${day.date}: ${day.count} contributions`}
+                  onMouseEnter={(e) => handleDayMouseEnter(e, day)}
+                  onMouseLeave={handleDayMouseLeave}
+                  onMouseMove={handleDayMouseMove}
                 />
               ))}
             </div>
@@ -306,6 +339,15 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
               </div>
               <span className="legend-label">More</span>
             </div>
+            {tooltip && (
+              <ContributionTooltip
+                date={tooltip.date}
+                count={tooltip.count}
+                x={tooltip.x}
+                y={tooltip.y}
+                visible={true}
+              />
+            )}
           </div>
         ) : null}
         {/* Compact Streak and Achievements */}
