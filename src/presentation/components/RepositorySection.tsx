@@ -3,8 +3,8 @@ import { Repository } from '@/domain/entities/Repository';
 import { RepositoryCard } from './RepositoryCard';
 import { LoadMoreButton } from './LoadMoreButton';
 import { SkeletonLoader } from './SkeletonLoader';
-import { Container } from '@/infrastructure/di/Container';
 import { useLanguage } from '../i18n/useLanguage';
+import { useServices } from '../context/ServiceContext';
 import './styles/section.css';
 
 interface RepositorySectionProps {
@@ -16,6 +16,7 @@ export const RepositorySection: React.FC<RepositorySectionProps> = React.memo(({
   repositories: initialRepositories,
   loading: initialLoading = false,
 }) => {
+  const services = useServices();
   const { t } = useLanguage();
   const [repositories, setRepositories] = useState<Repository[]>(initialRepositories);
   const [loading, setLoading] = useState(false);
@@ -35,8 +36,7 @@ export const RepositorySection: React.FC<RepositorySectionProps> = React.memo(({
   const handleLoadMore = async () => {
     setLoading(true);
     try {
-      const container = Container.getInstance();
-      const repoService = container.getRepositoryService();
+      const repoService = services.getRepositoryService();
       const result = await repoService.getRecentlyUpdated(10, cursor);
 
       // Remove duplicates by nameWithOwner

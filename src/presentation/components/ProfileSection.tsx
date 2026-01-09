@@ -4,8 +4,8 @@ import { ContributionCalendar } from '@/domain/entities/ContributionCalendar';
 import { ContributionStreak } from '@/domain/entities/ContributionStreak';
 import { AchievementBadge } from '@/domain/entities/AchievementBadge';
 import { DashboardData } from '@/domain/usecases/GetDashboardData';
-import { Container } from '@/infrastructure/di/Container';
 import { StorageKeys } from '@/application/config/StorageKeys';
+import { useServices } from '../context/ServiceContext';
 import { useLanguage } from '../i18n/useLanguage';
 import { SkeletonLoader } from './SkeletonLoader';
 import { StreakDisplay } from './StreakDisplay';
@@ -22,6 +22,7 @@ interface ProfileSectionProps {
 }
 
 export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user, loading = false, dashboardData = null, dashboardLoading = false }) => {
+  const services = useServices();
   const { t } = useLanguage();
   const [calendar, setCalendar] = useState<ContributionCalendar | null>(null);
   const [calendarLoading, setCalendarLoading] = useState(true);
@@ -48,8 +49,7 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
       try {
         setCalendarLoading(true);
         setCalendarError(null);
-        const container = Container.getInstance();
-        const calendarRepo = container.getContributionCalendarRepository();
+        const calendarRepo = services.getContributionCalendarRepository();
         
         // Get last year's contributions (exactly 365 days ago to now)
         const now = new Date();
@@ -75,7 +75,7 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
     };
 
     fetchCalendar();
-  }, [user]);
+  }, [user, services]);
 
   // Fetch streak and achievements when calendar is available
   useEffect(() => {
@@ -87,10 +87,9 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
       try {
         setStreakLoading(true);
         setBadgesLoading(true);
-        const container = Container.getInstance();
-        const streakService = container.getStreakService();
-        const achievementService = container.getAchievementService();
-        const prRepository = container.getPullRequestRepository();
+        const streakService = services.getStreakService();
+        const achievementService = services.getAchievementService();
+        const prRepository = services.getPullRequestRepository();
 
         // Calculate streak
         const streakData = await streakService.calculateStreak(calendar);
@@ -116,14 +115,13 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
     };
 
     fetchStreakAndBadges();
-  }, [calendar, user]);
+  }, [calendar, user, services]);
 
   // Load motivation message setting
   useEffect(() => {
     const loadSetting = async () => {
       try {
-        const container = Container.getInstance();
-        const storage = container.getStorage();
+        const storage = services.getStorage();
         const saved = await storage.get<boolean>(StorageKeys.SHOW_MOTIVATION_MESSAGE);
         setShowMotivationMessage(saved !== false); // Default to true
       } catch {

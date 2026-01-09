@@ -5,8 +5,8 @@ import { StatsButton } from '../../components/StatsButton';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguage } from '../../i18n/useLanguage';
 import { SettingsMenu } from './SettingsMenu';
-import { Container } from '@/infrastructure/di/Container';
 import { StorageKeys } from '@/application/config/StorageKeys';
+import { useServices } from '../../context/ServiceContext';
 import { User } from '@/domain/entities/User';
 import './header.css';
 
@@ -27,6 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   user,
   onStatsClick,
 }) => {
+  const services = useServices();
   const { theme, toggleTheme } = useTheme();
   const { t, language, setLanguage } = useLanguage();
   const isInIframe = window.self !== window.top;
@@ -36,8 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     const checkShowOnGitHub = async () => {
       try {
-        const container = Container.getInstance();
-        const storage = container.getStorage();
+        const storage = services.getStorage();
         const value = await storage.get<boolean>(StorageKeys.SHOW_ON_GITHUB);
         setShowOnGitHub(value !== false); // Default to true
       } catch {
@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange);
     };
-  }, []);
+  }, [services]);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'ja' : 'en');
@@ -65,8 +65,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const revertToGitHub = async () => {
     try {
-      const container = Container.getInstance();
-      const storage = container.getStorage();
+      const storage = services.getStorage();
       // Disable dashboard on GitHub pages
       await storage.set(StorageKeys.SHOW_ON_GITHUB, false);
       

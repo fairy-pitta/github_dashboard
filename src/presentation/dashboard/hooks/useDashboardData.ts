@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { DashboardData } from '@/domain/usecases/GetDashboardData';
-import { Container } from '@/infrastructure/di/Container';
 import { NetworkError } from '@/domain/errors/DomainError';
+import { useServices } from '../../context/ServiceContext';
 
 export interface DashboardDataState {
   data: DashboardData | null;
@@ -23,14 +23,15 @@ export function useDashboardData(
     error: null,
   });
 
+  const services = useServices();
+
   const fetchData = useCallback(
     async (forceRefresh: boolean = false) => {
       if (!enabled) return;
       try {
         setState((prev) => ({ ...prev, loading: true, error: null }));
 
-        const container = Container.getInstance();
-        const dashboardService = container.getDashboardService();
+        const dashboardService = services.getDashboardService();
 
         let data = await dashboardService.getDashboardData(limit, forceRefresh);
 
@@ -71,7 +72,7 @@ export function useDashboardData(
         }
       }
     },
-    [limit, filterOpenOnly, state.data, enabled]
+    [limit, filterOpenOnly, state.data, enabled, services]
   );
 
   useEffect(() => {

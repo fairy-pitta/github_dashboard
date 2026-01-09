@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User } from '@/domain/entities/User';
-import { Container } from '@/infrastructure/di/Container';
 import { StorageKeys } from '@/application/config/StorageKeys';
+import { useServices } from '../../context/ServiceContext';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -13,6 +13,7 @@ export interface AuthState {
  * Hook for authentication state management
  */
 export function useAuth(): AuthState {
+  const services = useServices();
   const [state, setState] = useState<AuthState>({
     isAuthenticated: false,
     user: null,
@@ -22,14 +23,13 @@ export function useAuth(): AuthState {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const container = Container.getInstance();
-        const storage = container.getStorage();
+        const storage = services.getStorage();
 
         // Try to get token (GITHUB_TOKEN takes priority, falls back to PAT_TOKEN)
         // First check if we can use AuthService (if container is initialized)
         let token: string | null = null;
         try {
-          const authService = container.getAuthService();
+          const authService = services.getAuthService();
           token = await authService.getToken();
         } catch {
           // Container not initialized yet, check storage directly
@@ -51,8 +51,8 @@ export function useAuth(): AuthState {
 
         // Try to initialize container and validate token
         try {
-          await container.initialize(token);
-          const authService = container.getAuthService();
+          await services.initialize(token);
+          const authService = services.getAuthService();
           const user = await authService.validateCurrentToken();
 
           setState({
@@ -98,7 +98,7 @@ export function useAuth(): AuthState {
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange);
     };
-  }, []);
+  }, [services]);
 
   return state;
 }

@@ -3,6 +3,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useDashboardData } from '../useDashboardData';
 import { Container } from '@/infrastructure/di/Container';
 import { DashboardData } from '@/domain/usecases/GetDashboardData';
+import { ServiceContextProvider } from '../../../context/ServiceContext';
+import React from 'react';
 
 describe('useDashboardData', () => {
   beforeEach(() => {
@@ -25,7 +27,9 @@ describe('useDashboardData', () => {
 
     vi.spyOn(Container, 'getInstance').mockReturnValue(mockContainer as unknown as Container);
 
-    const { result } = renderHook(() => useDashboardData());
+    const { result } = renderHook(() => useDashboardData(), {
+      wrapper: ({ children }) => <ServiceContextProvider>{children}</ServiceContextProvider>,
+    });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -46,7 +50,9 @@ describe('useDashboardData', () => {
 
     vi.spyOn(Container, 'getInstance').mockReturnValue(mockContainer as unknown as Container);
 
-    const { result } = renderHook(() => useDashboardData());
+    const { result } = renderHook(() => useDashboardData(), {
+      wrapper: ({ children }) => <ServiceContextProvider>{children}</ServiceContextProvider>,
+    });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -73,7 +79,9 @@ describe('useDashboardData', () => {
 
     vi.spyOn(Container, 'getInstance').mockReturnValue(mockContainer as unknown as Container);
 
-    const { result } = renderHook(() => useDashboardData());
+    const { result } = renderHook(() => useDashboardData(), {
+      wrapper: ({ children }) => <ServiceContextProvider>{children}</ServiceContextProvider>,
+    });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);

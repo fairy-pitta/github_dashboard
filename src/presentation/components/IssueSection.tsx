@@ -3,8 +3,8 @@ import { Issue } from '@/domain/entities/Issue';
 import { IssueCard } from './IssueCard';
 import { LoadMoreButton } from './LoadMoreButton';
 import { SkeletonLoader } from './SkeletonLoader';
-import { Container } from '@/infrastructure/di/Container';
 import { useLanguage } from '../i18n/useLanguage';
+import { useServices } from '../context/ServiceContext';
 import './styles/section.css';
 
 interface IssueSectionProps {
@@ -16,6 +16,7 @@ export const IssueSection: React.FC<IssueSectionProps> = React.memo(({
   issues: initialIssues,
   loading: initialLoading = false,
 }) => {
+  const services = useServices();
   const { t } = useLanguage();
   const [issues, setIssues] = useState<Issue[]>(initialIssues);
   const [loading, setLoading] = useState(false);
@@ -30,8 +31,7 @@ export const IssueSection: React.FC<IssueSectionProps> = React.memo(({
   const handleLoadMore = async () => {
     setLoading(true);
     try {
-      const container = Container.getInstance();
-      const issueRepo = container.getIssueRepository();
+      const issueRepo = services.getIssueRepository();
       const result = await issueRepo.getInvolved(10, cursor);
 
       setIssues((prev) => [...prev, ...result.issues]);

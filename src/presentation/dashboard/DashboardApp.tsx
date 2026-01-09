@@ -8,8 +8,8 @@ import { SkeletonLoader } from '../components/SkeletonLoader';
 import { useAuth } from './hooks/useAuth';
 import { useDashboardData } from './hooks/useDashboardData';
 import { useTheme } from './hooks/useTheme';
-import { Container } from '@/infrastructure/di/Container';
 import { StatsData } from '@/domain/entities/StatsData';
+import { useServices } from '../context/ServiceContext';
 import './styles/dashboard.css';
 
 // Lazy load sections for code splitting
@@ -36,6 +36,7 @@ const RepositorySection = lazy(() =>
 
 export const DashboardApp: React.FC = () => {
   const auth = useAuth();
+  const services = useServices();
   useTheme(); // Initialize theme
   const [filter, setFilter] = useState<'all' | 'open'>('open');
   const [isStatsOpen, setIsStatsOpen] = useState(false);
@@ -53,8 +54,7 @@ export const DashboardApp: React.FC = () => {
     const fetchStats = async () => {
       try {
         setStatsLoading(true);
-        const container = Container.getInstance();
-        const statsService = container.getStatsService();
+        const statsService = services.getStatsService();
         const statsData = await statsService.getStatsData();
         setStats(statsData);
       } catch (error) {
@@ -65,7 +65,7 @@ export const DashboardApp: React.FC = () => {
       }
     };
     fetchStats();
-  }, []);
+  }, [services]);
 
   const handleStatsClose = useCallback(() => {
     setIsStatsOpen(false);

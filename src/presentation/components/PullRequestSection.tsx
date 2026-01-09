@@ -3,8 +3,8 @@ import { PullRequest } from '@/domain/entities/PullRequest';
 import { PRCard } from './PRCard';
 import { LoadMoreButton } from './LoadMoreButton';
 import { SkeletonLoader } from './SkeletonLoader';
-import { Container } from '@/infrastructure/di/Container';
 import { useLanguage } from '../i18n/useLanguage';
+import { useServices } from '../context/ServiceContext';
 import './styles/section.css';
 import './styles/pr-tabs.css';
 
@@ -21,6 +21,7 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
   reviewRequestedPRs: initialReviewRequestedPRs,
   loading = false,
 }) => {
+  const services = useServices();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>('created');
   const [createdPRs, setCreatedPRs] = useState<PullRequest[]>(initialCreatedPRs);
@@ -46,8 +47,7 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
   const handleLoadMore = async () => {
     setLoadingMore(true);
     try {
-      const container = Container.getInstance();
-      const prRepo = container.getPullRequestRepository();
+      const prRepo = services.getPullRequestRepository();
       
       if (activeTab === 'created') {
         const result = await prRepo.getCreatedByMe(10, createdCursor);

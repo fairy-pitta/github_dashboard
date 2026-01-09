@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Container } from '@/infrastructure/di/Container';
 import { StorageKeys } from '@/application/config/StorageKeys';
+import { useServices } from '../../context/ServiceContext';
 
 export type Theme = 'light' | 'dark' | 'light-blue' | 'light-purple' | 'light-green' | 'light-pink' | 'light-white';
 
 export function useTheme() {
+  const services = useServices();
   const [theme, setTheme] = useState<Theme>('light');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadTheme = async () => {
       try {
-        const container = Container.getInstance();
-        const storage = container.getStorage();
+        const storage = services.getStorage();
         const savedTheme = await storage.get<Theme>(StorageKeys.THEME);
         
         const validThemes: Theme[] = ['light', 'dark', 'light-blue', 'light-purple', 'light-green', 'light-pink', 'light-white'];
@@ -32,7 +32,7 @@ export function useTheme() {
     };
 
     loadTheme();
-  }, []);
+  }, [services]);
 
   const applyTheme = (newTheme: Theme) => {
     document.documentElement.setAttribute('data-theme', newTheme);
@@ -43,8 +43,7 @@ export function useTheme() {
     applyTheme(newTheme);
 
     try {
-      const container = Container.getInstance();
-      const storage = container.getStorage();
+      const storage = services.getStorage();
       await storage.set(StorageKeys.THEME, newTheme);
     } catch (error) {
       console.error('Failed to save theme:', error);

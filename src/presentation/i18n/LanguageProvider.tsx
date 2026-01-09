@@ -1,17 +1,17 @@
 import React, { useState, useEffect, ReactNode } from 'react';
-import { Container } from '@/infrastructure/di/Container';
 import { StorageKeys } from '@/application/config/StorageKeys';
 import { Language, translations } from './translations';
 import { LanguageContext } from './useLanguage';
+import { useServices } from '../context/ServiceContext';
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
+  const services = useServices();
   const [language, setLanguageState] = useState<Language>('en');
 
   useEffect(() => {
     const loadLanguage = async () => {
       try {
-        const container = Container.getInstance();
-        const storage = container.getStorage();
+        const storage = services.getStorage();
         const savedLanguage = await storage.get<Language>(StorageKeys.LANGUAGE);
         
         if (savedLanguage === 'en' || savedLanguage === 'ja') {
@@ -26,13 +26,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     };
 
     loadLanguage();
-  }, []);
+  }, [services]);
 
   const setLanguage = async (lang: Language) => {
     setLanguageState(lang);
     try {
-      const container = Container.getInstance();
-      const storage = container.getStorage();
+      const storage = services.getStorage();
       await storage.set(StorageKeys.LANGUAGE, lang);
     } catch (error) {
       console.error('Failed to save language:', error);

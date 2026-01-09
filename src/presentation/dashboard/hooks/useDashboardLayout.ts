@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Container } from '@/infrastructure/di/Container';
 import { StorageKeys } from '@/application/config/StorageKeys';
+import { useServices } from '../../context/ServiceContext';
 import {
   DashboardLayoutConfig,
   SectionConfig,
@@ -9,6 +9,7 @@ import {
 } from '../types/layout';
 
 export function useDashboardLayout() {
+  const services = useServices();
   const [config, setConfig] = useState<DashboardLayoutConfig>(DEFAULT_LAYOUT_CONFIG);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
@@ -17,8 +18,7 @@ export function useDashboardLayout() {
   useEffect(() => {
     const loadConfig = async () => {
       try {
-        const container = Container.getInstance();
-        const storage = container.getStorage();
+        const storage = services.getStorage();
         const savedConfig = await storage.get<DashboardLayoutConfig>(StorageKeys.DASHBOARD_LAYOUT);
 
         if (savedConfig && savedConfig.sections && Array.isArray(savedConfig.sections)) {
@@ -37,20 +37,19 @@ export function useDashboardLayout() {
     };
 
     loadConfig();
-  }, []);
+  }, [services]);
 
   // Save configuration to storage
   const saveConfig = useCallback(async (newConfig: DashboardLayoutConfig) => {
     try {
-      const container = Container.getInstance();
-      const storage = container.getStorage();
+      const storage = services.getStorage();
       await storage.set(StorageKeys.DASHBOARD_LAYOUT, newConfig);
       setConfig(newConfig);
     } catch (error) {
       console.error('Failed to save dashboard layout:', error);
       throw error;
     }
-  }, []);
+  }, [services]);
 
   // Reorder sections
   const reorderSections = useCallback(

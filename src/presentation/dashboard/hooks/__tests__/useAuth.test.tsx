@@ -4,6 +4,8 @@ import { useAuth } from '../useAuth';
 import { Container } from '@/infrastructure/di/Container';
 import { StorageKeys } from '@/application/config/StorageKeys';
 import { User } from '@/domain/entities/User';
+import { ServiceContextProvider } from '../../../context/ServiceContext';
+import React from 'react';
 
 // Mock chrome.storage
 const mockStorage: Record<string, unknown> = {};
@@ -54,7 +56,9 @@ describe('useAuth', () => {
   });
 
   it('should return unauthenticated state when no token exists', async () => {
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), {
+      wrapper: ({ children }) => <ServiceContextProvider>{children}</ServiceContextProvider>,
+    });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -85,7 +89,9 @@ describe('useAuth', () => {
 
     vi.spyOn(Container, 'getInstance').mockReturnValue(mockContainer as unknown as Container);
 
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuth(), {
+      wrapper: ({ children }) => <ServiceContextProvider>{children}</ServiceContextProvider>,
+    });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
