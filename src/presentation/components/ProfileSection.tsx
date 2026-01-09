@@ -199,14 +199,15 @@ export const ProfileSection: React.FC<ProfileSectionProps> = React.memo(({ user,
   }, []);
 
   const handleDayMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (tooltip) {
-      setTooltip({
-        ...tooltip,
+    setTooltip((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
         x: e.clientX,
         y: e.clientY,
-      });
-    }
-  }, [tooltip]);
+      };
+    });
+  }, []);
 
   return (
       <section className="dashboard-section profile-section">

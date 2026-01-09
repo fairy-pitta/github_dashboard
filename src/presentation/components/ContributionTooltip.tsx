@@ -19,17 +19,25 @@ export const ContributionTooltip: React.FC<ContributionTooltipProps> = ({
   visible,
 }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x, y });
   const [mounted, setMounted] = useState(false);
+  const [position, setPosition] = useState({ x: x + 12, y: y + 12 });
+  const offset = 12;
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Update position immediately when mouse moves to prevent flickering
   useEffect(() => {
-    if (!visible || !tooltipRef.current) {
-      // Initialize position with mouse position
-      setPosition({ x, y });
+    if (!visible) {
+      return;
+    }
+
+    // Set initial position immediately
+    setPosition({ x: x + offset, y: y + offset });
+
+    // Fine-tune position after DOM is ready
+    if (!tooltipRef.current) {
       return;
     }
 
@@ -40,7 +48,6 @@ export const ContributionTooltip: React.FC<ContributionTooltipProps> = ({
       const tooltipRect = tooltip.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const offset = 12; // Distance from cursor
 
       // Start with cursor position + offset
       let adjustedX = x + offset;
@@ -70,10 +77,8 @@ export const ContributionTooltip: React.FC<ContributionTooltipProps> = ({
     };
 
     // Use requestAnimationFrame to ensure DOM is updated before calculating position
-    requestAnimationFrame(() => {
-      requestAnimationFrame(updatePosition);
-    });
-  }, [x, y, visible]);
+    requestAnimationFrame(updatePosition);
+  }, [x, y, visible, offset]);
 
   if (!visible || !mounted) {
     return null;
