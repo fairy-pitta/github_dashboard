@@ -6,8 +6,9 @@ import { Issue } from '../entities/Issue';
 export interface StatsInput {
   calendar: ContributionCalendar;
   pullRequests: PullRequest[];
+  reviewedPRs: PullRequest[];
+  commentedPRs: PullRequest[];
   issues: Issue[];
-  reviews: number;
 }
 
 /**
@@ -99,14 +100,22 @@ export class GetStatsData {
       return issue.updatedAt >= startDate && issue.updatedAt <= endDate;
     }).length;
 
-    // Reviews are passed as a parameter (would need to be calculated from review data)
-    const reviews = input.reviews;
+    // Count reviews (PRs reviewed by the user) by updatedAt
+    const reviews = input.reviewedPRs.filter((pr) => {
+      return pr.updatedAt >= startDate && pr.updatedAt <= endDate;
+    }).length;
+
+    // Count comments (PRs the user has commented on) by updatedAt
+    const comments = input.commentedPRs.filter((pr) => {
+      return pr.updatedAt >= startDate && pr.updatedAt <= endDate;
+    }).length;
 
     return {
       commits,
       pullRequests,
       reviews,
       issues,
+      comments,
     };
   }
 }

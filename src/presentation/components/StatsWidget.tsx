@@ -114,6 +114,13 @@ export const StatsWidget: React.FC<StatsWidgetProps> = ({
                     change={stats.getWeekChange('issues')}
                     icon="fa-exclamation-circle"
                   />
+                  <StatCard
+                    title={t.statsComments || 'コメント'}
+                    current={stats.currentWeek.comments}
+                    previous={stats.previousWeek.comments}
+                    change={stats.getWeekChange('comments')}
+                    icon="fa-comment"
+                  />
                 </div>
               </div>
               <div className="stats-section">
@@ -146,6 +153,13 @@ export const StatsWidget: React.FC<StatsWidgetProps> = ({
                     previous={stats.previousMonth.issues}
                     change={stats.getMonthChange('issues')}
                     icon="fa-exclamation-circle"
+                  />
+                  <StatCard
+                    title={t.statsComments || 'コメント'}
+                    current={stats.currentMonth.comments}
+                    previous={stats.previousMonth.comments}
+                    change={stats.getMonthChange('comments')}
+                    icon="fa-comment"
                   />
                 </div>
               </div>

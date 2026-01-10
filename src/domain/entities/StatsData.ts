@@ -6,6 +6,7 @@ export interface PeriodStats {
   pullRequests: number;
   reviews: number;
   issues: number;
+  comments: number;
 }
 
 export class StatsData {
