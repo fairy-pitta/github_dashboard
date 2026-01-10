@@ -22,6 +22,7 @@ describe('DashboardService', () => {
       getCreatedByMe: vi.fn(),
       getReviewRequested: vi.fn(),
       getReviewedByMe: vi.fn(),
+      getCommentedByMe: vi.fn(),
     };
 
     mockIssueRepository = {
@@ -52,6 +53,7 @@ describe('DashboardService', () => {
     const cachedData = {
       createdPRs: [],
       reviewRequestedPRs: [],
+      reviewedPRs: [],
       involvedIssues: [],
       recentlyUpdatedRepos: [],
     };
@@ -84,6 +86,7 @@ describe('DashboardService', () => {
     vi.mocked(mockCache.get).mockResolvedValue(null);
     vi.mocked(mockPRRepository.getCreatedByMe).mockResolvedValue({ prs: [mockPR] });
     vi.mocked(mockPRRepository.getReviewRequested).mockResolvedValue({ prs: [] });
+    vi.mocked(mockPRRepository.getReviewedByMe).mockResolvedValue({ prs: [] });
     vi.mocked(mockIssueRepository.getInvolved).mockResolvedValue({ issues: [] });
     vi.mocked(mockRepoRepository.getRecentlyUpdated).mockResolvedValue({
       repositories: [],
@@ -99,6 +102,7 @@ describe('DashboardService', () => {
     const cachedData = {
       createdPRs: [],
       reviewRequestedPRs: [],
+      reviewedPRs: [],
       involvedIssues: [],
       recentlyUpdatedRepos: [],
     };

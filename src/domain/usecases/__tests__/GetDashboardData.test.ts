@@ -18,6 +18,7 @@ describe('GetDashboardData', () => {
       getCreatedByMe: vi.fn(),
       getReviewRequested: vi.fn(),
       getReviewedByMe: vi.fn(),
+      getCommentedByMe: vi.fn(),
     };
 
     mockIssueRepository = {
@@ -78,6 +79,7 @@ describe('GetDashboardData', () => {
 
     vi.mocked(mockPRRepository.getCreatedByMe).mockResolvedValue({ prs: [mockPR] });
     vi.mocked(mockPRRepository.getReviewRequested).mockResolvedValue({ prs: [mockPR] });
+    vi.mocked(mockPRRepository.getReviewedByMe).mockResolvedValue({ prs: [mockPR] });
     vi.mocked(mockIssueRepository.getInvolved).mockResolvedValue({ issues: [mockIssue] });
     vi.mocked(mockRepoRepository.getRecentlyUpdated).mockResolvedValue({
       repositories: [mockRepo],
@@ -87,10 +89,12 @@ describe('GetDashboardData', () => {
 
     expect(result.createdPRs).toHaveLength(1);
     expect(result.reviewRequestedPRs).toHaveLength(1);
+    expect(result.reviewedPRs).toHaveLength(1);
     expect(result.involvedIssues).toHaveLength(1);
     expect(result.recentlyUpdatedRepos).toHaveLength(1);
     expect(mockPRRepository.getCreatedByMe).toHaveBeenCalledWith(10);
     expect(mockPRRepository.getReviewRequested).toHaveBeenCalledWith(10);
+    expect(mockPRRepository.getReviewedByMe).toHaveBeenCalledWith(10);
     expect(mockIssueRepository.getInvolved).toHaveBeenCalledWith(10);
     expect(mockRepoRepository.getRecentlyUpdated).toHaveBeenCalledWith(10);
   });
@@ -98,6 +102,7 @@ describe('GetDashboardData', () => {
   it('should use default limit of 10', async () => {
     vi.mocked(mockPRRepository.getCreatedByMe).mockResolvedValue({ prs: [] });
     vi.mocked(mockPRRepository.getReviewRequested).mockResolvedValue({ prs: [] });
+    vi.mocked(mockPRRepository.getReviewedByMe).mockResolvedValue({ prs: [] });
     vi.mocked(mockIssueRepository.getInvolved).mockResolvedValue({ issues: [] });
     vi.mocked(mockRepoRepository.getRecentlyUpdated).mockResolvedValue({
       repositories: [],
