@@ -75,12 +75,19 @@ export const PRCard: React.FC<PRCardProps> = React.memo(({ pr, onClick }) => {
     }
   }, [onClick, pr.url]);
 
+  const hasConflict = pr.mergeable === 'CONFLICTING';
+
   return (
     <div className="card pr-card" onClick={handleClick}>
       <div className="card-header">
         <span className={`badge ${badgeClass}`}>
           {stateLabel}
         </span>
+        {hasConflict && (
+          <span className="badge badge-conflict" title="Has merge conflicts">
+            <i className="fas fa-exclamation-triangle"></i> Conflict
+          </span>
+        )}
         <span className="card-repo">{pr.repository.nameWithOwner}</span>
       </div>
       <h3 className="card-title">{pr.title}</h3>

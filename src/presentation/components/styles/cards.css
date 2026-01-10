@@ -271,4 +271,16 @@
   color: var(--badge-changes-text, #ef6c00);
 }
 
+.badge-conflict {
+  background-color: var(--badge-conflict-bg, #ffebee);
+  color: var(--badge-conflict-text, #c62828);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-conflict i {
+  font-size: 10px;
+}
+
 

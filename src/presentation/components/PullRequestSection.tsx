@@ -12,14 +12,16 @@ import './styles/pr-tabs.css';
 interface PullRequestSectionProps {
   createdPRs: PullRequest[];
   reviewRequestedPRs: PullRequest[];
+  reviewedPRs?: PullRequest[];
   loading?: boolean;
 }
 
-type TabType = 'created' | 'review-requested';
+type TabType = 'created' | 'review-requested' | 'reviewed';
 
 export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(({
   createdPRs: initialCreatedPRs,
   reviewRequestedPRs: initialReviewRequestedPRs,
+  reviewedPRs: initialReviewedPRs = [],
   loading = false,
 }) => {
   const services = useServices();
@@ -27,46 +29,57 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
   const [activeTab, setActiveTab] = useState<TabType>('created');
   const [createdPRs, setCreatedPRs] = useState<PullRequest[]>(initialCreatedPRs);
   const [reviewRequestedPRs, setReviewRequestedPRs] = useState<PullRequest[]>(initialReviewRequestedPRs);
+  const [reviewedPRs, setReviewedPRs] = useState<PullRequest[]>(initialReviewedPRs);
   const [loadingMore, setLoadingMore] = useState(false);
   const [createdCursor, setCreatedCursor] = useState<string | undefined>();
   const [reviewRequestedCursor, setReviewRequestedCursor] = useState<string | undefined>();
+  const [reviewedCursor, setReviewedCursor] = useState<string | undefined>();
   const [hasMoreCreated, setHasMoreCreated] = useState(true);
   const [hasMoreReviewRequested, setHasMoreReviewRequested] = useState(true);
+  const [hasMoreReviewed, setHasMoreReviewed] = useState(true);
   const [reviewFilters, setReviewFilters] = useState<ReviewStatusFilterOption[]>(['ALL']);
 
   // Update PRs when initial PRs change, removing duplicates
   useEffect(() => {
     // Remove duplicates by repository.nameWithOwner and number
     const getPRKey = (pr: PullRequest) => `${pr.repository.nameWithOwner}-${pr.number}`;
-    
+
     const uniqueCreatedPRs = initialCreatedPRs.filter(
       (pr, index, self) =>
         index === self.findIndex((p) => getPRKey(p) === getPRKey(pr))
     );
-    
+
     const uniqueReviewRequestedPRs = initialReviewRequestedPRs.filter(
       (pr, index, self) =>
         index === self.findIndex((p) => getPRKey(p) === getPRKey(pr))
     );
-    
+
+    const uniqueReviewedPRs = initialReviewedPRs.filter(
+      (pr, index, self) =>
+        index === self.findIndex((p) => getPRKey(p) === getPRKey(pr))
+    );
+
     setCreatedPRs(uniqueCreatedPRs);
     setReviewRequestedPRs(uniqueReviewRequestedPRs);
+    setReviewedPRs(uniqueReviewedPRs);
     // Reset cursors when initial data changes
     setCreatedCursor(undefined);
     setReviewRequestedCursor(undefined);
+    setReviewedCursor(undefined);
     setHasMoreCreated(true);
     setHasMoreReviewRequested(true);
-  }, [initialCreatedPRs, initialReviewRequestedPRs]);
+    setHasMoreReviewed(true);
+  }, [initialCreatedPRs, initialReviewRequestedPRs, initialReviewedPRs]);
 
 
   const handleLoadMore = async () => {
     setLoadingMore(true);
     try {
       const prRepo = services.getPullRequestRepository();
-      
+
       // Helper function to get PR key
       const getPRKey = (pr: PullRequest) => `${pr.repository.nameWithOwner}-${pr.number}`;
-      
+
       if (activeTab === 'created') {
         const result = await prRepo.getCreatedByMe(10, createdCursor);
         // Remove duplicates by repository.nameWithOwner and number
@@ -77,7 +90,7 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
         });
         setCreatedCursor(result.nextCursor);
         setHasMoreCreated(!!result.nextCursor);
-      } else {
+      } else if (activeTab === 'review-requested') {
         const result = await prRepo.getReviewRequested(10, reviewRequestedCursor);
         // Remove duplicates by repository.nameWithOwner and number
         setReviewRequestedPRs((prev) => {
@@ -87,6 +100,16 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
         });
         setReviewRequestedCursor(result.nextCursor);
         setHasMoreReviewRequested(!!result.nextCursor);
+      } else {
+        const result = await prRepo.getReviewedByMe(10, reviewedCursor);
+        // Remove duplicates by repository.nameWithOwner and number
+        setReviewedPRs((prev) => {
+          const existingKeys = new Set(prev.map((pr) => getPRKey(pr)));
+          const newPRs = result.prs.filter((pr) => !existingKeys.has(getPRKey(pr)));
+          return [...prev, ...newPRs];
+        });
+        setReviewedCursor(result.nextCursor);
+        setHasMoreReviewed(!!result.nextCursor);
       }
     } catch (error) {
       console.error('Failed to load more PRs:', error);
@@ -97,7 +120,7 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
 
   // Filter PRs based on review status
   const filteredPRs = useMemo(() => {
-    const prs = activeTab === 'created' ? createdPRs : reviewRequestedPRs;
+    const prs = activeTab === 'created' ? createdPRs : activeTab === 'review-requested' ? reviewRequestedPRs : reviewedPRs;
     
     if (reviewFilters.includes('ALL') || reviewFilters.length === 0) {
       return prs;
@@ -140,13 +163,29 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
         }
       });
     });
-  }, [activeTab, createdPRs, reviewRequestedPRs, reviewFilters]);
+  }, [activeTab, createdPRs, reviewRequestedPRs, reviewedPRs, reviewFilters]);
 
   const currentPRs = filteredPRs;
-  const currentTitle = activeTab === 'created' ? t.pullRequestsCreated : t.pullRequestsReviewRequested;
-  const currentEmptyMessage = activeTab === 'created' ? t.noPullRequests : t.noPullRequestsReview;
-  const currentIcon = activeTab === 'created' ? 'fa-code-pull-request' : 'fa-user-check';
-  const currentHasMore = activeTab === 'created' ? hasMoreCreated : hasMoreReviewRequested;
+  const currentTitle = activeTab === 'created'
+    ? t.pullRequestsCreated
+    : activeTab === 'review-requested'
+      ? t.pullRequestsReviewRequested
+      : t.pullRequestsReviewed;
+  const currentEmptyMessage = activeTab === 'created'
+    ? t.noPullRequests
+    : activeTab === 'review-requested'
+      ? t.noPullRequestsReview
+      : t.noPullRequestsReviewed;
+  const currentIcon = activeTab === 'created'
+    ? 'fa-code-pull-request'
+    : activeTab === 'review-requested'
+      ? 'fa-user-check'
+      : 'fa-clipboard-check';
+  const currentHasMore = activeTab === 'created'
+    ? hasMoreCreated
+    : activeTab === 'review-requested'
+      ? hasMoreReviewRequested
+      : hasMoreReviewed;
 
   if (loading) {
     return (
@@ -166,6 +205,13 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
             >
               <i className="fas fa-user-check"></i>
               {t.pullRequestsReviewRequested}
+            </button>
+            <button
+              className={`pr-tab ${activeTab === 'reviewed' ? 'active' : ''}`}
+              disabled
+            >
+              <i className="fas fa-clipboard-check"></i>
+              {t.pullRequestsReviewed}
             </button>
           </div>
           <div className="section-content">
@@ -198,6 +244,16 @@ export const PullRequestSection: React.FC<PullRequestSectionProps> = React.memo(
             {t.pullRequestsReviewRequested}
             {reviewRequestedPRs.length > 0 && (
               <span className="pr-tab-count">({reviewRequestedPRs.length})</span>
+            )}
+          </button>
+          <button
+            className={`pr-tab ${activeTab === 'reviewed' ? 'active' : ''}`}
+            onClick={() => setActiveTab('reviewed')}
+          >
+            <i className="fas fa-clipboard-check"></i>
+            {t.pullRequestsReviewed}
+            {reviewedPRs.length > 0 && (
+              <span className="pr-tab-count">({reviewedPRs.length})</span>
             )}
           </button>
           <div className="pr-tab-header-actions">

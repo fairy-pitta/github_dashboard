@@ -36,6 +36,7 @@ export interface Translations {
   favoriteRepositories: string;
   pullRequestsCreated: string;
   pullRequestsReviewRequested: string;
+  pullRequestsReviewed: string;
   issuesInvolved: string;
   
   // Common
@@ -44,6 +45,7 @@ export interface Translations {
   noData: string;
   noPullRequests: string;
   noPullRequestsReview: string;
+  noPullRequestsReviewed: string;
   noIssues: string;
   noRepositories: string;
   
@@ -152,6 +154,7 @@ export interface Translations {
   statsPullRequests: string;
   statsReviews: string;
   statsIssues: string;
+  statsComments: string;
   close: string;
   
   // Repository actions
@@ -227,12 +230,14 @@ export const translations: Record<Language, Translations> = {
     recentlyUpdatedRepositories: 'Recently Updated Repositories',
     pullRequestsCreated: 'Pull Requests (Created by Me)',
     pullRequestsReviewRequested: 'Pull Requests (Review Requested)',
+    pullRequestsReviewed: 'Pull Requests (Reviewed by Me)',
     issuesInvolved: 'Issues (Involved)',
     loading: 'Loading...',
     loadMore: 'Load More',
     noData: 'No data found',
     noPullRequests: 'No pull requests found',
     noPullRequestsReview: 'No pull requests need your review',
+    noPullRequestsReviewed: 'No pull requests reviewed by you',
     noIssues: 'No issues found',
     noRepositories: 'No repositories found',
     githubExtension: 'GitHub Extension',
@@ -323,6 +328,7 @@ export const translations: Record<Language, Translations> = {
     statsPullRequests: 'Pull Requests',
     statsReviews: 'Reviews',
     statsIssues: 'Issues',
+    statsComments: 'Comments',
     close: 'Close',
     createPR: 'Create PR',
     createIssue: 'Create Issue',
@@ -480,12 +486,14 @@ export const translations: Record<Language, Translations> = {
     favoriteRepositories: 'お気に入りリポジトリ',
     pullRequestsCreated: 'プルリクエスト (作成したもの)',
     pullRequestsReviewRequested: 'プルリクエスト (レビュー依頼)',
+    pullRequestsReviewed: 'プルリクエスト (レビュー済み)',
     issuesInvolved: 'イシュー (関連)',
     loading: '読み込み中...',
     loadMore: 'さらに読み込む',
     noData: 'データが見つかりません',
     noPullRequests: 'プルリクエストが見つかりません',
     noPullRequestsReview: 'レビューが必要なプルリクエストはありません',
+    noPullRequestsReviewed: 'レビュー済みのプルリクエストはありません',
     noIssues: 'イシューが見つかりません',
     noRepositories: 'リポジトリが見つかりません',
     githubExtension: 'GitHub 拡張機能',
@@ -576,6 +584,7 @@ export const translations: Record<Language, Translations> = {
     statsPullRequests: 'プルリクエスト',
     statsReviews: 'レビュー',
     statsIssues: 'イシュー',
+    statsComments: 'コメント',
     close: '閉じる',
     createPR: 'PRを作成',
     createIssue: 'Issueを作成',
