@@ -64,6 +64,9 @@ export interface Translations {
   oauthInstructions: string;
   oauthDeviceFlowTitle: string;
   oauthDeviceFlowCodeLabel: string;
+  oauthDeviceFlowCopy: string;
+  oauthDeviceFlowCopied: string;
+  oauthDeviceFlowCopyFailed: string;
   oauthDeviceFlowOpenLabel: string;
   oauthDeviceFlowWaiting: string;
   manualTokenInput: string;
@@ -155,6 +158,7 @@ export interface Translations {
   statsReviews: string;
   statsIssues: string;
   statsComments: string;
+  statsPrevious: string;
   close: string;
   
   // Repository actions
@@ -163,6 +167,22 @@ export interface Translations {
   viewAllRepositories: string;
   viewOrganizationRepositories: string;
   viewMyRepositories: string;
+  
+  // PR Card labels
+  reviewed: string;
+  reviewedByYou: string;
+  conflict: string;
+  hasMergeConflicts: string;
+  updated: string;
+  comments: string;
+  prMerged: string;
+  prClosed: string;
+  prOpen: string;
+  assignee: string;
+  assignees: string;
+  reviewCommentedLabel: string;
+  reviewChangesRequestedLabel: string;
+  reviewApprovedLabel: string;
   
   // Motivation message settings
   showMotivationMessage: string;
@@ -254,6 +274,9 @@ export const translations: Record<Language, Translations> = {
     oauthInstructions: 'Click the button below to authenticate with GitHub using OAuth. This is the recommended method as it is more secure than manually entering a token.',
     oauthDeviceFlowTitle: 'Complete sign-in on GitHub',
     oauthDeviceFlowCodeLabel: 'Code:',
+    oauthDeviceFlowCopy: 'Copy code',
+    oauthDeviceFlowCopied: 'Code copied to clipboard',
+    oauthDeviceFlowCopyFailed: 'Could not copy the code. Please copy it manually.',
     oauthDeviceFlowOpenLabel: 'Open:',
     oauthDeviceFlowWaiting: 'After you authorize on GitHub, this page will continue automatically.',
     manualTokenInput: 'Manual Token Input',
@@ -329,12 +352,27 @@ export const translations: Record<Language, Translations> = {
     statsReviews: 'Reviews',
     statsIssues: 'Issues',
     statsComments: 'Comments',
+    statsPrevious: 'Previous:',
     close: 'Close',
     createPR: 'Create PR',
     createIssue: 'Create Issue',
     viewAllRepositories: 'View all repositories',
     viewOrganizationRepositories: 'View organization repositories',
     viewMyRepositories: 'View my repositories',
+    reviewed: 'Reviewed',
+    reviewedByYou: 'Reviewed by you',
+    conflict: 'Conflict',
+    hasMergeConflicts: 'Has merge conflicts',
+    updated: 'Updated',
+    comments: 'comments',
+    prMerged: 'Merged',
+    prClosed: 'Closed',
+    prOpen: 'Open',
+    assignee: 'assignee',
+    assignees: 'assignees',
+    reviewCommentedLabel: 'Commented',
+    reviewChangesRequestedLabel: 'Changes',
+    reviewApprovedLabel: 'Approved',
     addToFavorites: 'Add to favorites',
     removeFromFavorites: 'Remove from favorites',
     showMotivationMessage: 'Show motivation messages',
@@ -510,6 +548,9 @@ export const translations: Record<Language, Translations> = {
     oauthInstructions: '下のボタンをクリックして、OAuthを使用してGitHubで認証します。これは、トークンを手動で入力するよりも安全な推奨方法です。',
     oauthDeviceFlowTitle: 'GitHubでログインを完了してください',
     oauthDeviceFlowCodeLabel: 'コード:',
+    oauthDeviceFlowCopy: 'コードをコピー',
+    oauthDeviceFlowCopied: 'コードをクリップボードにコピーしました',
+    oauthDeviceFlowCopyFailed: 'コピーできませんでした。手動でコピーしてください。',
     oauthDeviceFlowOpenLabel: '開く:',
     oauthDeviceFlowWaiting: 'GitHubで承認が完了すると、この画面が自動で続行します。',
     manualTokenInput: '手動でトークンを入力',
@@ -585,12 +626,27 @@ export const translations: Record<Language, Translations> = {
     statsReviews: 'レビュー',
     statsIssues: 'イシュー',
     statsComments: 'コメント',
+    statsPrevious: '前:',
     close: '閉じる',
     createPR: 'PRを作成',
     createIssue: 'Issueを作成',
     viewAllRepositories: '全てのリポジトリを見る',
     viewOrganizationRepositories: '組織のリポジトリを見る',
     viewMyRepositories: '自分のリポジトリを見る',
+    reviewed: 'レビュー済み',
+    reviewedByYou: 'あなたがレビュー済み',
+    conflict: 'コンフリクト',
+    hasMergeConflicts: 'マージコンフリクトがあります',
+    updated: '更新',
+    comments: 'コメント',
+    prMerged: 'マージ済み',
+    prClosed: 'クローズ済み',
+    prOpen: 'オープン',
+    assignee: 'アサイン済み',
+    assignees: 'アサイン済み',
+    reviewCommentedLabel: 'コメント',
+    reviewChangesRequestedLabel: '変更要求',
+    reviewApprovedLabel: '承認',
     addToFavorites: 'お気に入りに追加',
     removeFromFavorites: 'お気に入りから削除',
     showMotivationMessage: 'モチベーションメッセージを表示',
@@ -713,4 +769,3 @@ export const translations: Record<Language, Translations> = {
     },
   },
 };
-
