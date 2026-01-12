@@ -26,6 +26,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
   const [showManualTokenInput, setShowManualTokenInput] = useState(false);
   const [oauthError, setOauthError] = useState<string | null>(null);
   const [deviceCodeInfo, setDeviceCodeInfo] = useState<DeviceCodeInfo | null>(null);
+  const [deviceCodeCopyStatus, setDeviceCodeCopyStatus] = useState<'copied' | 'failed' | null>(null);
   const [patError, setPatError] = useState<string | null>(null);
   const [status, setStatus] = useState<{
     type: 'success' | 'error' | 'info';
@@ -82,16 +83,53 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
       // Reset errors when settings menu is opened
       setOauthError(null);
       setDeviceCodeInfo(null);
+      setDeviceCodeCopyStatus(null);
       setPatError(null);
       setStatus(null);
     }
   }, [isOpen, loadSettings]);
+
+  const copyToClipboard = useCallback(async (text: string): Promise<boolean> => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        // Fallback to legacy copy method
+      }
+    }
+
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      textarea.style.top = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const success = document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return success;
+    } catch {
+      return false;
+    }
+  }, []);
+
+  const handleCopyDeviceCode = useCallback(
+    async (code: string) => {
+      const copied = await copyToClipboard(code);
+      setDeviceCodeCopyStatus(copied ? 'copied' : 'failed');
+    },
+    [copyToClipboard]
+  );
 
   const handleOAuthAuthenticate = async () => {
     setOauthLoading(true);
     setOauthError(null);
     setStatus(null);
     setDeviceCodeInfo(null);
+    setDeviceCodeCopyStatus(null);
 
     try {
       // Check if OAuth is configured before attempting authentication
@@ -108,11 +146,10 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
       const oauthService = new GitHubOAuthService({
         onDeviceCode: (info) => {
           setDeviceCodeInfo(info);
+          handleCopyDeviceCode(info.userCode);
         },
       });
       const accessToken = await oauthService.authenticate();
-
-      const authService = services.getAuthService();
 
       // Save OAuth token using AuthService (which handles storage internally)
       // Note: AuthService.saveToken() validates the token, but we've already validated it
@@ -384,9 +421,33 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
                   <div style={{ fontWeight: 600, marginBottom: '8px' }}>
                     {t.oauthDeviceFlowTitle}
                   </div>
-                  <div style={{ marginBottom: '6px' }}>
-                    {t.oauthDeviceFlowCodeLabel}{' '}
+                  <div
+                    style={{
+                      marginBottom: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <span>{t.oauthDeviceFlowCodeLabel}</span>
                     <code style={{ fontWeight: 700 }}>{deviceCodeInfo.userCode}</code>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyDeviceCode(deviceCodeInfo.userCode)}
+                      style={{
+                        padding: '4px 8px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: '#084298',
+                        backgroundColor: '#e0efff',
+                        border: '1px solid #b6d8ff',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {t.oauthDeviceFlowCopy}
+                    </button>
                   </div>
                   <div>
                     {t.oauthDeviceFlowOpenLabel}{' '}
@@ -399,6 +460,16 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
                       {deviceCodeInfo.verificationUri}
                     </a>
                   </div>
+                  {deviceCodeCopyStatus === 'copied' && (
+                    <div style={{ marginTop: '6px', color: '#146c2e', fontSize: '12px' }}>
+                      {t.oauthDeviceFlowCopied}
+                    </div>
+                  )}
+                  {deviceCodeCopyStatus === 'failed' && (
+                    <div style={{ marginTop: '6px', color: '#8a1f11', fontSize: '12px' }}>
+                      {t.oauthDeviceFlowCopyFailed}
+                    </div>
+                  )}
                   <div style={{ marginTop: '8px', opacity: 0.9 }}>
                     {t.oauthDeviceFlowWaiting}
                   </div>
@@ -606,4 +677,3 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ isOpen, onClose }) =
 
   return createPortal(menuContent, document.body);
 };
-
