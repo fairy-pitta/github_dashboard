@@ -9,9 +9,9 @@ Welcome to the GitHub Dashboard documentation site.
 
 ## Privacy Policy
 
-- [Privacy Policy (English)]({{ '/privacy-policy.html' | relative_url }})
-- [プライバシーポリシー (日本語)]({{ '/privacy-policy-ja.html' | relative_url }})
+- [Privacy Policy (English)]({{ site.baseurl }}/privacy-policy.html)
+- [プライバシーポリシー (日本語)]({{ site.baseurl }}/privacy-policy-ja.html)
 
 ## Other Documentation
 
-- [Architecture Documentation]({{ '/ARCHITECTURE.html' | relative_url }})
+- [Architecture Documentation]({{ site.baseurl }}/ARCHITECTURE.html)
