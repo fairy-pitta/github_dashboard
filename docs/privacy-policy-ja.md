@@ -1,3 +1,8 @@
+---
+layout: default
+title: プライバシーポリシー
+---
+
 # GitHub Dashboard プライバシーポリシー
 
 **最終更新日:** 2025年1月13日
